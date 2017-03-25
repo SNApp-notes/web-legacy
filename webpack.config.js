@@ -1,10 +1,21 @@
-module.exports = {
-    entry:  __dirname + "/app/app.js",
-    output: {
-        path: __dirname + "/dist",
-        filename: "boundle.js"
-    },
+var path = require('path');
+var webpack = require('webpack');
 
+module.exports = {
+    entry:  {
+        app: path.resolve('./app') + '/app.js',
+        vendor: ["jquery", "angular"]
+    },
+    output: {
+        path: path.resolve('./dist'),
+        filename: "[name].js"
+    },
+    plugins: [
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "vendor",
+            minChunks: Infinity,
+        })
+    ],
     module: {
         loaders: [
             {
@@ -17,7 +28,7 @@ module.exports = {
             },
             {
                 test: /jquery(\.min)?\.js$/,
-                loader: 'expose?jQuery'
+                loader: 'expose-loader?jQuery'
             },
             {
                 test: /\.html$/,

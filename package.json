@@ -2,7 +2,9 @@
   "name": "notes",
   "version": "0.0.1",
   "description": "Angular 1.5>= app for taking notes",
-  "scripts": {},
+  "scripts": {
+    "webpack": "webpack"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jcubic/notes.git"
@@ -18,8 +20,18 @@
     "url": "https://github.com/jcubic/notes/issues"
   },
   "homepage": "https://github.com/jcubic/notes#readme",
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "angular": "^1.6.3",
+    "babel-core": "^6.24.0",
+    "babel-loader": "^6.4.1",
+    "babel-preset-env": "^1.2.2",
+    "css-loader": "^0.27.3",
+    "expose-loader": "^0.7.3",
+    "file-loader": "^0.10.1",
+    "html-loader": "^0.4.5",
+    "jquery": "^3.2.1",
+    "style-loader": "^0.16.0",
     "webpack": "^2.3.2"
   }
 }
