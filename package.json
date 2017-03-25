@@ -1,0 +1,25 @@
+{
+  "name": "notes",
+  "version": "0.0.1",
+  "description": "Angular 1.5>= app for taking notes",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jcubic/notes.git"
+  },
+  "keywords": [
+    "angular",
+    "notes",
+    "app"
+  ],
+  "author": "Jakub Jankiewicz <jcubic@onet.pl> (http://jcubic.pl/me)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jcubic/notes/issues"
+  },
+  "homepage": "https://github.com/jcubic/notes#readme",
+  "dependencies": {
+    "angular": "^1.6.3",
+    "webpack": "^2.3.2"
+  }
+}
