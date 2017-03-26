@@ -3,11 +3,14 @@
 
 (load "sha.scm")
 
-(use-modules (json))
-(use-modules (dbi dbi))
-(use-modules (ice-9 regex))
-(use-modules (curl))
+(use-modules (json)
+             (dbi dbi)
+             (ice-9 regex)
+             (curl))
 
+
+(define (now)
+    (strftime "%e %h %Y %R:%S %z" (localtime (current-time))))
 
 (define db (dbi-open "sqlite3" "notes.db"))
 
@@ -140,7 +143,7 @@
                                      (escape-string username)
                                      "'"))
   (dbi-get_row db))
-;;(create-user "kuba" "jcubic@onet.pl" "vampire666")
+
 (define (valid-password user password)
     "validate user"
   (if user
@@ -149,7 +152,35 @@
         (equal? (string->sha1 (string-append password salt)) hash-password))
     #f))
 
+(define (mail to subject message . verbose)
+    (define data-port
+        (open-input-string (string-append
+                            "From: noreplay@notes.jcubic.pl\r\n"
+                            "To: " to "\r\n"
+                            "Subject: " subject "\r\n"
+                            "Date: " (now) "\r\n"
+                            "\r\n"
+                            message
+                            "\r\n")))
 
+  (define handle (curl-easy-init))
+  (define email (hash-ref config "email"))
+  (curl-easy-setopt handle 'url "smtp://mail.jcubic.pl")
+  (if (and (not (null? verbose)) (car verbose))
+      (curl-easy-setopt handle 'verbose #t))
+  (curl-easy-setopt handle 'ssl-verifyhost 0)
+  (curl-easy-setopt handle 'ssl-verifypeer #f)
+  (curl-easy-setopt handle 'use-ssl CURLUSESSL_NONE)
+  (curl-easy-setopt handle 'username (hash-ref email "user"))
+  (curl-easy-setopt handle 'password (hash-ref email "password"))
+  (curl-easy-setopt handle 'mail-from (hash-ref email "email"))
+  (curl-easy-setopt handle 'mail-rcpt (list to))
+  (curl-easy-setopt handle 'readdata data-port)
+  (curl-easy-setopt handle 'upload #t )
+  (curl-easy-perform handle))
+
+
+;;(setlocale LC_ALL "")
 (JSON-RPC "service"
           ((login . (lambda (username password)
                       (let ((user (get-user username)))
@@ -185,7 +216,12 @@
            (register . (lambda (username email password)
                          (let ((token (create-user username email password)))
                            (if token
-                               (string-append "confirm your email " token)))))
+                               (let ((subject "activation key")
+                                     (message (string-append "Your activation key is: "
+                                                             token)))
+                                 (mail email subject message)
+                                 #t)
+                             #f))))
            (activate . (lambda (token)
                          (dbi-query db (string-append "SELECT * FROM activation WHERE token"
                                                       "= '"
@@ -207,31 +243,3 @@
 (dbi-close db)
 
 
-
-(setlocale LC_ALL "")
-
-(define (mail to subject message)
-    (define data-port
-        (open-input-string (string-append
-                            "From: noreplay@notes.jcubic.pl\r\n"
-                            "To: " to "\r\n"
-                            "Subject: " subject "\r\n"
-                            "\r\n"
-                            message
-                            "\r\n")))
-
-  (define handle (curl-easy-init))
-  (define email (hash-ref config "email"))
-  (curl-easy-setopt handle 'url "smtp://mail.jcubic.pl")
-  (curl-easy-setopt handle 'verbose #t)
-  (curl-easy-setopt handle 'ssl-verifyhost 0)
-  (curl-easy-setopt handle 'ssl-verifypeer #f)
-  (curl-easy-setopt handle 'use-ssl CURLUSESSL_NONE)
-  (curl-easy-setopt handle 'username (hash-ref email "user"))
-  (curl-easy-setopt handle 'password (hash-ref email "password"))
-  (curl-easy-setopt handle 'mail-from (hash-ref email "email"))
-  (curl-easy-setopt handle 'mail-rcpt (list to))
-  (curl-easy-setopt handle 'readdata data-port)
-  (curl-easy-perform handle))
-
-;;(mail "jcubic@jcubic.pl" "hello" "hello from scheme")
