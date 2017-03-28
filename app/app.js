@@ -1,6 +1,20 @@
 import angular from 'angular';
 import 'jquery';
+import 'ng-notifications-bar/dist/ngNotificationsBar.min.css';
+import ngNotificationsBar from 'ng-notifications-bar';
 import components from './components/index';
+import services from './services/index';
 import './app.css';
 
-angular.module('app', [components.name]);
+var module = angular.module('app', [
+    'ngNotificationsBar',
+    components.name,
+    services.name
+]);
+
+module.config(['rpcProvider', 'notificationsConfigProvider',
+               (rpcProvider, notificationsConfigProvider) => {
+                   rpcProvider.setup('rpc.scm');
+                   notificationsConfigProvider.setAcceptHTML(false);
+                   notificationsConfigProvider.setAutoHide(true);
+               }]);

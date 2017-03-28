@@ -61,43 +61,6 @@
 (define (json-response id result error)
   (scm->json-string `(("id" . ,id) ("result" . ,result) ("error" . ,error))))
 
-(defmacro JSON-RPC (name alist)
-  (catch 'json-invalid
-    (lambda ()
-      (let* ((request (json-string->scm post-data))
-             (method (hash-ref request "method"))
-             (id (hash-ref request "id"))
-             (params (hash-ref request "params" '()))
-             (def (map (lambda (pair)
-                         `(("name" . ,(car pair)) ("params" . ,(caddr pair))))
-                       alist)))
-        (if (or (not method) (not id))
-            (print (json-response id #nil "wrong request"))
-          (if (equal? method "system.describe")
-              (print (json-response id `(("name" . ,name) ("procs" . ,def)) #nil))
-            (let ((fun (assoc (string->symbol method) alist)))
-              (if (not (pair? fun))
-                  (print (json-response id #nil "wrong method"))
-                (let ((args-given (length params))
-                      (args-expected (length (caddr fun))))
-                  (if (not (eq? args-given args-expected))
-                      (print (json-response id
-                                            #nil
-                                            (string-append "wrong number of arguments"
-                                                           " got "
-                                                           (number->string args-given)
-                                                           " expected "
-                                                           (number->string args-expected))))
-                    `(catch 'error
-                       (lambda ()
-                         (print (json-response ,id (apply ,(cdr fun) (list ,@params)) #nil)))
-                       (lambda (key . args)
-                         (print (print (json-response #nil #nil (car args))))))))))))))
-    (lambda (key . args)
-      (print (print (json-response #nil #nil "parse error"))))))
-
-
-
 (define (string->sha1 string)
     (let ((port (open-input-string string)))
       (hex (sha1 port))))
@@ -140,8 +103,8 @@
 
 (define (get-user username)
     (dbi-query db (string-append "SELECT * FROM users WHERE username = '"
-                                     (escape-string username)
-                                     "'"))
+                                 (escape-string username)
+                                 "'"))
   (dbi-get_row db))
 
 (define (valid-password user password)
@@ -179,8 +142,61 @@
   (curl-easy-setopt handle 'upload #t )
   (curl-easy-perform handle))
 
+(eval-when (expand)
+  (define (input-list body)
+      (list 'quasiquote (map (lambda (pair)
+                               (cons (car pair)
+                                     (list 'unquote (cdr pair))))
+                             body))))
+(eval-when (expand)
+  (define (definition body)
+      (list 'quote (map (lambda (pair)
+                          (list (cons "name" (symbol->string (car pair)))
+                                (cons "params" (map symbol->string (caddr pair)))))
+                        body))))
 
+(defmacro JSON-RPC (name alist)
+  (let ((input (gensym)))
+    `(catch 'json-invalid
+       (lambda ()
+         (let* ((,input ,(input-list alist))
+                (request (json-string->scm post-data))
+                (method (hash-ref request "method"))
+                (id (hash-ref request "id"))
+                (input-params (hash-ref request "params" '()))
+                (def ,(definition alist))
+                (method-def (find (lambda (def)
+                                    (equal? method (cdr (assoc "name" def))))
+                                  def))
+                (params (if method-def (cdr (assoc "params" method-def)) '())))
+           (if (or (not method) (not id))
+               (print (json-response id #nil "wrong request"))
+             (if (equal? method "system.describe")
+                 (print (json-response id `(("name" . ,,name) ("procs" . ,def)) #nil))
+               (let ((fun (assoc (string->symbol method) ,input)))
+                 (if (not (pair? fun))
+                     (print (json-response id #nil "wrong method"))
+                   (let ((args-given (length input-params))
+                         (args-expected (length params)))
+                     (if (not (eq? args-given args-expected))
+                         (let ((message (string-append "wrong number of arguments"
+                                                       " got "
+                                                       (number->string args-given)
+                                                       " expected "
+                                                       (number->string args-expected))))
+                         (print (json-response id #nil message)))
+                       (catch 'error
+                         (lambda ()
+                           (print (json-response id (apply (cdr fun) input-params) #nil)))
+                         (lambda (key . args)
+                           (print (json-response id #nil (car args)))))))))))))
+       (lambda (key . args)
+         (print (print (json-response #nil #nil "parse error")))))))
+
+
+(use-modules (language tree-il))
 ;;(setlocale LC_ALL "")
+
 (JSON-RPC "service"
           ((login . (lambda (username password)
                       (let ((user (get-user username)))

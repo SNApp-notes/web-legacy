@@ -3,8 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
     entry:  {
-        app: path.resolve('./app') + '/app.js',
-        vendor: ["jquery", "angular"]
+        app: path.resolve('./app') + '/app.js'
     },
     output: {
         path: path.resolve('./dist'),
@@ -13,7 +12,10 @@ module.exports = {
     plugins: [
         new webpack.optimize.CommonsChunkPlugin({
             name: "vendor",
-            minChunks: Infinity,
+            minChunks: function (module) {
+                // this assumes your vendor imports exist in the node_modules directory
+                return module.context && module.context.indexOf("node_modules") !== -1;
+            }
         })
     ],
     module: {
