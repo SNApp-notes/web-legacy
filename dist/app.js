@@ -116,7 +116,7 @@ __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _module = _angular2.default.module('app', ['ngNotificationsBar', _index2.default.name, _index4.default.name]);
+var _module = _angular2.default.module('app', [_ngNotificationsBar2.default.name, _index2.default.name, _index4.default.name]);
 
 _module.config(['rpcProvider', 'notificationsConfigProvider', function (rpcProvider, notificationsConfigProvider) {
     rpcProvider.setup('rpc.scm');

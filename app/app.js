@@ -7,7 +7,7 @@ import services from './services/index';
 import './app.css';
 
 var module = angular.module('app', [
-    'ngNotificationsBar',
+    ngNotificationsBar.name,
     components.name,
     services.name
 ]);

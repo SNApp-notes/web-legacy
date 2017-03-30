@@ -1,0 +1,3 @@
+#!/bin/bash
+
+node -e "console.log(JSON.stringify({id: 1, method: '$1', params: $2}))" | php -f rpc.php
