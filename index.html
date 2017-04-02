@@ -25,7 +25,9 @@
             <li ng-hide="auth.token"><a ui-sref="login">login</a></li>
             <li ng-hide="auth.token"><a ui-sref="register">register</a></li>
             <li ng-show="auth.token">{{auth.username}}</li>
-            <li ng-show="auth.token"><a ng-click="auth.logout()">logout</a></li>
+            <li ng-show="auth.token">
+                <a href="#" ng-click="auth.logout(); $event.preventDefault()">logout</a>
+            </li>
         </ul>
     </header>
     <div ui-view></div>

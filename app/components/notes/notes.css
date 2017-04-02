@@ -1,0 +1,43 @@
+notes {
+    display: block;
+}
+.nav-tabs .glyphicon {
+    font-size: 10px;
+}
+.nav-tabs .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 2px 10px 0 10px;
+}
+.nav-tabs>li>a {
+    cursor: pointer;
+}
+.nav-tabs>li[role="presentation"]>a:not(.close) {
+    padding-right: 30px;
+}
+.nav-tabs>li.active>a.close,
+.nav-tabs>li.active>a.close:focus,
+.nav-tabs>li.active>a.close:hover,
+.nav-tabs>li>a.close,
+.nav-tabs>li>a.close:focus,
+.nav-tabs>li>a.close:hover {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+}
+.tab-content {
+    height: calc(100% - 45px);
+}
+.tab-content div, .tab-content textarea {
+    height: 100%;
+}
+.tab-content textarea {
+    resize: none;
+    border: none;
+    width: 100%;
+}
+.tab-content textarea,
+.tab-content textarea:focus {
+    outline: none;
+}

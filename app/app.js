@@ -6,6 +6,7 @@ import components from './components/';
 import services from './services/';
 import directives from './directives/';
 import uiRouter from 'angular-ui-router';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
 var module = angular.module('app', [
@@ -39,7 +40,7 @@ module.config([
             template: '<main></main>'
         }).state({
             name: 'notes',
-            url: 'notes/:tab?',
+            url: '/notes/:tab?',
             template: '<notes></notes>'
         });
         $urlRouterProvider.otherwise('/');

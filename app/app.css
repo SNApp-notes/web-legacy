@@ -1,8 +1,25 @@
 body {
-    maring: 0;
+    margin: 0;
     padding: 0;
+    height: 100vh;
 }
-
 input.ng-untouched ~ .error {
     display: none;
+}
+header {
+    text-align: right;
+}
+header ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+header li {
+    display: inline-block;
+    margin: 5px;
+    font-size: 14px;
+}
+[ui-view] {
+    height: calc(100% - 30px);
 }

@@ -1,0 +1,17 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" ng-class="{active: ctrl.selected == $index}"
+        ng-repeat="tab in ctrl.tabs">
+        <a href="#" ng-click="ctrl.selected = $index; $event.preventDefault()">
+            {{tab.name}}
+        </a>
+        <a class="close" ng-click="ctrl.deleteNote($index); $event.stopPropagation()">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </a>
+    </li>
+    <li><a href="#" ng-click="ctrl.newTab(); $event.preventDefault()">+</a></li>
+</ul>
+<div class="tab-content">
+    <div ng-repeat="tab in ctrl.tabs" ng-show="ctrl.selected == $index">
+        <textarea ng-model="tab.content"></textarea>
+    </div>
+</div>

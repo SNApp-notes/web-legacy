@@ -1,4 +1,4 @@
-function loginController(auth) {
+function registerController(auth) {
     this.register = ($event) => {
         $event.preventDefault();
         auth.register(this.username, this.email, this.password).then((key) => {
@@ -19,5 +19,5 @@ function loginController(auth) {
         });
     };
 }
-loginController.$inject = ['auth'];
-export default loginController;
+registerController.$inject = ['auth'];
+export default registerController;
