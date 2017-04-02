@@ -173,8 +173,9 @@ exports.default = function (rpc, notifications) {
             service.login('user', 'password').then(function (token) {
                 if (token) {
                     localStorage.setItem('notes_token', token);
-                    localStorage.setItem('notes_username', 'kuba');
+                    localStorage.setItem('notes_username', 'user');
                 }
+                notifications.showSuccess({ message: 'logged ' + token });
             }).catch(function (error) {
                 notifications.showError({ message: error });
                 service.register('user', 'jcubic@onet.pl', 'password').then(function (result) {

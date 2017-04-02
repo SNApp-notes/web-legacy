@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Angular 1.5>= app for taking notes",
   "scripts": {
-      "webpack": "webpack",
-      "serve": "webpack-dev-server --hot"
+    "webpack": "webpack",
+    "serve": "webpack-dev-server --hot"
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.1",
     "babel-preset-env": "^1.2.2",
+    "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.27.3",
     "expose-loader": "^0.7.3",
     "file-loader": "^0.10.1",

@@ -1,4 +1,5 @@
 var path = require('path');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var webpack = require('webpack');
 
 module.exports = {
@@ -16,7 +17,11 @@ module.exports = {
                 // this assumes your vendor imports exist in the node_modules directory
                 return module.context && module.context.indexOf("node_modules") !== -1;
             }
-        })
+        }),
+        new CopyWebpackPlugin([
+            {from: 'favicon', to: 'favicon'},
+            {from: 'index.html'}
+        ])
     ],
     module: {
         loaders: [
