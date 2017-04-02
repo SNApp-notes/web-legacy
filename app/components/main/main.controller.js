@@ -1,4 +1,5 @@
 export default function(rpc, notifications) {
+    return;
     rpc.then(function(service) {
         var name = 'notes_token';
         var token = localStorage.getItem('notes_token');

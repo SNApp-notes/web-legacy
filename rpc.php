@@ -127,7 +127,7 @@ class Service {
     function valid_token($username, $token) {
         $query = "SELECT username, token FROM users u, tokens t WHERE u.id = t.user " .
                "AND u.username = ? AND t.token = ?";
-        return $this->query($query, array($username, $token));
+        return !empty($this->query($query, array($username, $token)));
     }
 
     // -----------------------------------------------------------------------------------
@@ -175,6 +175,25 @@ class Service {
             throw new Exception("User not active");
         }
         return $this->auth($user['id']);
+    }
+
+    // -----------------------------------------------------------------------------------
+    function logout($token, $username) {
+        $data = $this->query("SELECT * FROM users u, tokens t WHERE t.token = ? AND " .
+                             "t.user = u.id", array($token));
+        if (empty($data)) {
+            throw new Exception("Invalid token");
+        }
+        if (count($data) > 1) {
+            throw new Exception("Internal: more then one token");
+        }
+        $data = $data[0];
+        if ($data['username'] != $username) {
+            throw new Exception("Invalid username");
+        }
+        if (!$this->query("DELETE FROM tokens WHERE token = ?", array($token))) {
+            throw new Exception("Couldn't delete token");
+        }
     }
 }
 

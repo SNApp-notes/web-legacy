@@ -24,6 +24,7 @@
   "dependencies": {},
   "devDependencies": {
     "angular": "^1.6.3",
+    "angular-ui-router": "^0.4.2",
     "babel-core": "^6.24.0",
     "babel-loader": "^6.4.1",
     "babel-preset-env": "^1.2.2",

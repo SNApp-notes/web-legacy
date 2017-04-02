@@ -1,0 +1,17 @@
+<form name="login">
+    <div>
+        <label for="username">username:</label>
+        <input type="text" id="username" name="username" placeholder="username or email"
+               ng-model="ctrl.username"/>
+    </div>
+    <div>
+        <label for="password">password:</label>
+        <input id="password" name="password" type="password" ng-model="ctrl.password" />
+    </div>
+    <div class="error" ng-show="ctrl.error">
+        {{ctrl.error}}
+    </div>
+    <div>
+        <input type="submit" ng-click="ctrl.login($event)" value="login"/>
+    </div>
+</form>
