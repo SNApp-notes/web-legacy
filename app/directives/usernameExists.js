@@ -6,10 +6,7 @@ function usernameExists(rpc, $timeout) {
             rpc.then((service) => {
                 model.$validators.usernameExists = function() {
                     return service.username_taken(model.$viewValue).then((taken) => {
-                        console.log(!taken);
-                        //$timeout(() => {
-                            model.$setValidity('usernameExists', !taken);
-                        //}, 0);
+                        model.$setValidity('usernameExists', !taken);
                     });
                 };
             });
