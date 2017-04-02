@@ -2,8 +2,9 @@ import angular from 'angular';
 import 'jquery';
 import 'ng-notifications-bar/dist/ngNotificationsBar.min.css';
 import ngNotificationsBar from 'ng-notifications-bar';
-import components from './components/index';
-import services from './services/index';
+import components from './components/';
+import services from './services/';
+import directives from './directives/';
 import uiRouter from 'angular-ui-router';
 import './app.css';
 
@@ -11,7 +12,8 @@ var module = angular.module('app', [
     uiRouter,
     ngNotificationsBar.name,
     components.name,
-    services.name
+    services.name,
+    directives.name
 ]);
 
 module.config([
@@ -29,7 +31,7 @@ module.config([
             template: '<login></login>'
         }).state({
             name: 'register',
-            url: 'register',
+            url: '/register',
             template: '<register></register>'
         }).state({
             name: 'index',

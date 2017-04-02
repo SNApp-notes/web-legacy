@@ -18,7 +18,7 @@ class Service {
                      " AUTOINCREMENT, username VARCHAR(256), password VARCHAR" .
                      "(40), salt VARCHAR(40), email VARCHAR(256), active INTE" .
                      "GER)");
-        $this->query("CREATE TABLE IF NOT EXISTS activation(id INTEGER PRIMAR" .
+        $this->query("CREATE TABLE IF NOT EXISTS activations(id INTEGER PRIMAR" .
                      "Y KEY AUTOINCREMENT, user INTEGER, key VARCHAR(40))");
         $this->query("CREATE TABLE IF NOT EXISTS tokens(id INTEGER PRIMARY KE" .
                      "Y AUTOINCREMENT, token VARCHAR(32), user INTEGER)");
@@ -81,14 +81,19 @@ class Service {
                 $email,
                 0
             ));
-            $activation_key = $this->token();
-            $query = "INSERT INTO activation(user, key) VALUES(?, ?)";
-            if ($this->query($query, array($id, $activation_key))) {
-                return $activation_key;
+            $activations_key = $this->token();
+            $query = "INSERT INTO activations(user, key) VALUES(?, ?)";
+            if ($this->query($query, array($id, $activations_key))) {
+                return $activations_key;
             } else {
                 return null;
             }
         }
+    }
+
+    // -----------------------------------------------------------------------------------
+    function username_taken($username) {
+        return !empty($this->get_user($username));
     }
 
     // -----------------------------------------------------------------------------------
@@ -112,7 +117,7 @@ class Service {
     function register($username, $email, $password) {
         $token = $this->create_user($username, $email, $password);
         if ($token) {
-            $message = "Your activation key is: " . $token;
+            $message = "Your activations key is: " . $token;
             if ($this->send_mail($email, "registratation", $message)) {
                 return true;
             } else {
@@ -131,21 +136,21 @@ class Service {
     }
 
     // -----------------------------------------------------------------------------------
-    function activate($activation_key) {
-        $query = "SELECT * FROM activation a, users u WHERE key = ? AND u.id = a.user";
-        $activation = $this->query($query, array($activation_key));
-        if (empty($activation)) {
-            throw new Exception("Wrong activation code");
+    function activate($activations_key) {
+        $query = "SELECT * FROM activations a, users u WHERE key = ? AND u.id = a.user";
+        $activations = $this->query($query, array($activations_key));
+        if (empty($activations)) {
+            throw new Exception("Wrong activations code");
         }
-        $activation = $activation[0];
-        $userid = $activation['user'];
+        $activations = $activations[0];
+        $userid = $activations['user'];
         $count = $this->query("UPDATE users SET active = 1 WHERE id = ?", array($userid));
         if ($count != 1) {
             throw new Exception("Coudn't update users table");
         } else {
-            $this->query("DELETE FROM activation WHERE key = ?", array($activation_key));
+            $this->query("DELETE FROM activations WHERE key = ?", array($activations_key));
         }
-        return $this->auth($activation['user']);
+        return $this->auth($activations['user']);
     }
 
     // -----------------------------------------------------------------------------------
@@ -169,7 +174,7 @@ class Service {
             throw new Exception("Invalid username");
         }
         if (!$this->valid_password($user, $password)) {
-            throw new Exception("Invalid Passoword");
+            throw new Exception("Invalid Password");
         }
         if (!$user['active']) {
             throw new Exception("User not active");

@@ -9,6 +9,15 @@ function service(rpc) {
         delete this.token;
         delete this.username;
     };
+    var set = (username, token) => {
+        localStorage.setItem(token_key, token);
+        localStorage.setItem(name_key, username);
+        this.username = username;
+        this.token = token;
+    }
+    this.auth = (username, token) => {
+        set(username, token);
+    };
     this.authenticated = () => {
         return rpc.then((service) => {
             return service.valid_token(this.username, this.token).then(function(valid) {
@@ -19,17 +28,24 @@ function service(rpc) {
             });
         });
     };
+    this.register = (username, email, password) => {
+        return rpc.then((service) => {
+            return service.register(username, email, password);
+        });
+    };
     this.login = (username, password) => {
         return rpc.then((service) => {
             return service.login(username, password).then((token) => {
                 if (token) {
-                    localStorage.setItem(token_key, token);
-                    localStorage.setItem(name_key, username);
-                    this.token = token;
-                    this.username = username;
+                    set(username, token);
                 }
                 return token;
             });
+        });
+    };
+    this.activate = (key) => {
+        return rpc.then((service) => {
+            return service.activate(key);
         });
     };
     this.logout = (username, password) => {
