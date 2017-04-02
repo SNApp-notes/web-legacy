@@ -136,21 +136,21 @@ class Service {
     }
 
     // -----------------------------------------------------------------------------------
-    function activate($activations_key) {
+    function activate($activation_key) {
         $query = "SELECT * FROM activations a, users u WHERE key = ? AND u.id = a.user";
-        $activations = $this->query($query, array($activations_key));
-        if (empty($activations)) {
+        $activation = $this->query($query, array($activation_key));
+        if (empty($activation)) {
             throw new Exception("Wrong activations code");
         }
-        $activations = $activations[0];
-        $userid = $activations['user'];
+        $activation = $activation[0];
+        $userid = $activation['user'];
         $count = $this->query("UPDATE users SET active = 1 WHERE id = ?", array($userid));
         if ($count != 1) {
             throw new Exception("Coudn't update users table");
         } else {
-            $this->query("DELETE FROM activations WHERE key = ?", array($activations_key));
+            $this->query("DELETE FROM activations WHERE key = ?", array($activation_key));
         }
-        return $this->auth($activations['user']);
+        return $this->auth($activation['user']);
     }
 
     // -----------------------------------------------------------------------------------
