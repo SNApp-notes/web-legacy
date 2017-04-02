@@ -1,3 +1,3 @@
-Options +ExecCGI
-
-AddHandler cgi-script .scm
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Headers "Content-Type"
+Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"

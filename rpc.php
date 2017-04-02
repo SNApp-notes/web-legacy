@@ -124,18 +124,41 @@ class Service {
     }
 
     // -----------------------------------------------------------------------------------
+    function valid_token($username, $token) {
+        $query = "SELECT username, token FROM users u, tokens t WHERE u.id = t.user " .
+               "AND u.username = ? AND t.token = ?";
+        return $this->query($query, array($username, $token));
+    }
+
+    // -----------------------------------------------------------------------------------
     function activate($activation_key) {
-        $query = "SELECT * FROM activation WHERE key = ?";
+        $query = "SELECT * FROM activation a, users u WHERE key = ? AND u.id = a.user";
         $activation = $this->query($query, array($activation_key));
         if (empty($activation)) {
             throw new Exception("Wrong activation code");
         }
-        $userid = $activation[0]['user'];
+        $activation = $activation[0];
+        $userid = $activation['user'];
         $count = $this->query("UPDATE users SET active = 1 WHERE id = ?", array($userid));
         if ($count != 1) {
             throw new Exception("Coudn't update users table");
         } else {
             $this->query("DELETE FROM activation WHERE key = ?", array($activation_key));
+        }
+        return $this->auth($activation['user']);
+    }
+
+    // -----------------------------------------------------------------------------------
+    private function auth($userid) {
+        $token = $this->token();
+        $id = $this->query("INSERT INTO tokens(token, user) VALUES(?, ?)", array(
+            $token,
+            $userid
+        ));
+        if ($id) {
+            return $token;
+        } else {
+            return null;
         }
     }
 
@@ -151,16 +174,7 @@ class Service {
         if (!$user['active']) {
             throw new Exception("User not active");
         }
-        $token = $this->token();
-        $id = $this->query("INSERT INTO tokens(token, user) VALUES(?, ?)", array(
-            $token,
-            $user['id']
-        ));
-        if ($id) {
-            return $token;
-        } else {
-            return null;
-        }
+        return $this->auth($user['id']);
     }
 }
 

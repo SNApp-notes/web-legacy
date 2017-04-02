@@ -3,8 +3,7 @@ webpackJsonp([0],[
 /* 1 */,
 /* 2 */,
 /* 3 */,
-/* 4 */,
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -30,7 +29,7 @@ _module.component('main', _main2.default);
 exports.default = _module;
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -57,6 +56,7 @@ _module.provider('rpc', _rpc2.default);
 exports.default = _module;
 
 /***/ }),
+/* 6 */,
 /* 7 */,
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -96,7 +96,7 @@ var _angular = __webpack_require__(0);
 
 var _angular2 = _interopRequireDefault(_angular);
 
-__webpack_require__(3);
+__webpack_require__(6);
 
 __webpack_require__(9);
 
@@ -104,11 +104,11 @@ var _ngNotificationsBar = __webpack_require__(7);
 
 var _ngNotificationsBar2 = _interopRequireDefault(_ngNotificationsBar);
 
-var _index = __webpack_require__(5);
+var _index = __webpack_require__(4);
 
 var _index2 = _interopRequireDefault(_index);
 
-var _index3 = __webpack_require__(6);
+var _index3 = __webpack_require__(5);
 
 var _index4 = _interopRequireDefault(_index3);
 
@@ -119,7 +119,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _module = _angular2.default.module('app', [_ngNotificationsBar2.default.name, _index2.default.name, _index4.default.name]);
 
 _module.config(['rpcProvider', 'notificationsConfigProvider', function (rpcProvider, notificationsConfigProvider) {
-    rpcProvider.setup('rpc.scm');
+    rpcProvider.setup('http://localhost/projects/jcubic/notes/rpc.php');
     notificationsConfigProvider.setAcceptHTML(false);
     notificationsConfigProvider.setAutoHide(true);
 }]);
@@ -169,25 +169,40 @@ exports.default = function (rpc, notifications) {
         var name = 'notes_token';
         var token = localStorage.getItem('notes_token');
         var username = localStorage.getItem('notes_username');
-        if (token && username) {
-            service.valid_token(username, token).then(function (valid) {
-                if (valid) {
-                    console.log('valid token');
-                } else {
-                    console.log('invalid token');
-                }
-            }).catch(function (error) {
-                notifications.showError({ message: error });
-            });
-        } else {
-            service.login('kuba', 'vampire666').then(function (token) {
+        function login() {
+            service.login('user', 'password').then(function (token) {
                 if (token) {
                     localStorage.setItem('notes_token', token);
                     localStorage.setItem('notes_username', 'kuba');
                 }
             }).catch(function (error) {
                 notifications.showError({ message: error });
+                service.register('user', 'jcubic@onet.pl', 'password').then(function (result) {
+                    if (result === true) {
+                        notifications.showSuccess({ message: 'email sent' });
+                    } else {
+                        service.activate(result).then(function () {
+                            notifications.showSuccess({
+                                message: 'Email error, auto activated '
+                            });
+                        });
+                    }
+                });
             });
+        }
+        if (token && username) {
+            service.valid_token(username, token).then(function (valid) {
+                if (valid) {
+                    notifications.showSuccess({ message: 'valid token' });
+                } else {
+                    notifications.showError({ message: 'invalid token' });
+                    localStorage.removeItem('notes_token');
+                    localStorage.removeItem('notes_username');
+                    login();
+                }
+            });
+        } else {
+            login();
         }
     });
 };
@@ -225,7 +240,7 @@ exports.default = function () {
         var defer = $q.defer();
         return rpc('system.describe').then(function (data) {
             var service = {};
-            data.result.procs.forEach(function (spec) {
+            data.procs.forEach(function (spec) {
                 service[spec.name] = function () {
                     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
                         args[_key] = arguments[_key];
@@ -234,7 +249,7 @@ exports.default = function () {
                     if (args.length == spec.params.length) {
                         return rpc(spec.name, args).then(function (data) {
                             if (data.error) {
-                                throw data.error;
+                                throw data.error.message;
                             } else {
                                 return data.result;
                             }
@@ -248,12 +263,6 @@ exports.default = function () {
         });
     }];
 };
-
-var _jquery = __webpack_require__(3);
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 ;
 

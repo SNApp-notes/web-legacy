@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 export default function() {
     var id = 1;
     function request(method, params) {
@@ -20,12 +18,12 @@ export default function() {
         var defer = $q.defer();
         return rpc('system.describe').then(data => {
             var service = {};
-            data.result.procs.forEach(spec => {
+            data.procs.forEach(spec => {
                 service[spec.name] = function(...args) {
                     if (args.length == spec.params.length) {
                         return rpc(spec.name, args).then(data => {
                             if (data.error) {
-                                throw data.error;
+                                throw data.error.message;
                             } else {
                                 return data.result;
                             }

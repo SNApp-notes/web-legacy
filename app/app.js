@@ -14,7 +14,7 @@ var module = angular.module('app', [
 
 module.config(['rpcProvider', 'notificationsConfigProvider',
                (rpcProvider, notificationsConfigProvider) => {
-                   rpcProvider.setup('rpc.scm');
+                   rpcProvider.setup('http://localhost/projects/jcubic/notes/rpc.php');
                    notificationsConfigProvider.setAcceptHTML(false);
                    notificationsConfigProvider.setAutoHide(true);
                }]);
