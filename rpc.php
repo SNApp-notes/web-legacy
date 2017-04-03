@@ -23,7 +23,8 @@ class Service {
         $this->query("CREATE TABLE IF NOT EXISTS tokens(id INTEGER PRIMARY KE" .
                      "Y AUTOINCREMENT, token VARCHAR(32), user INTEGER)");
         $this->query("CREATE TABLE IF NOT EXISTS notes(id INTEGER PRIMARY KEY" .
-                     " AUTOINCREMENT, user INTEGER, content TEXT)");
+                     " AUTOINCREMENT, name VARCHAR(255), user INTEGER, conten" .
+                     "t TEXT)");
     }
 
     // -----------------------------------------------------------------------------------
@@ -184,6 +185,22 @@ class Service {
 
     // -----------------------------------------------------------------------------------
     function logout($token, $username) {
+        $this->validate_user($token, $username);
+        if (!$this->query("DELETE FROM tokens WHERE token = ?", array($token))) {
+            throw new Exception("Couldn't delete token");
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
+    function validate_user($token, $username) {
+        $data = $this->get_token_data($token);
+        if ($data['username'] != $username) {
+            throw new Exception("Invalid username");
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
+    private function get_token_data($token) {
         $data = $this->query("SELECT * FROM users u, tokens t WHERE t.token = ? AND " .
                              "t.user = u.id", array($token));
         if (empty($data)) {
@@ -192,20 +209,61 @@ class Service {
         if (count($data) > 1) {
             throw new Exception("Internal: more then one token");
         }
-        $data = $data[0];
+        return $data[0];
+    }
+
+    // -----------------------------------------------------------------------------------
+    private function get_user_id($token, $username) {
+        $data = $this->get_token_data($token);
         if ($data['username'] != $username) {
             throw new Exception("Invalid username");
         }
-        if (!$this->query("DELETE FROM tokens WHERE token = ?", array($token))) {
-            throw new Exception("Couldn't delete token");
+        return $data['user'];
+    }
+
+    // -----------------------------------------------------------------------------------
+    function get_notes($token, $username) {
+        $id = $this->get_user_id($token, $username);
+        return $this->query("SELECT * FROM notes WHERE user = ?", array($id));
+    }
+
+    // -----------------------------------------------------------------------------------
+    function create_note($token, $username, $note) {
+        $id = $this->get_user_id($token, $username);
+        $query = "INSERT INTO notes(user, name, content) VALUES(?, ?, ?)";
+        return $this->query($query, array($id, $note->name, $note->content));
+    }
+
+    // -----------------------------------------------------------------------------------
+    function remove_note($token, $username, $note_id) {
+        $user_id = $this->get_user_id($token, $username);
+        $query = "DELETE FROM notes WHERE user = ? AND id = ?";
+        if ($this->query($query, array($user_id, $note_id)) != 1) {
+            throw new Exception("Wrong note");
+        }
+    }
+
+    // -----------------------------------------------------------------------------------
+    function save_note($token, $username, $note) {
+        $user_id = $this->get_user_id($token, $username);
+        $query = "UPDATE notes SET name = ?, content = ? WHERE id = ? AND user = ?";
+        $row_aftected = $this->query($query, array(
+            $note->name,
+            $note->content,
+            $note->id,
+            $user_id
+        ));
+        if ($row_aftected != 1) {
+            throw new Exception("Wrong note");
         }
     }
 }
+if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] != 'OPTIONS') {
+    error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+    ini_set('display_errors', 'On');
+    require_once("json-rpc.php");
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-ini_set('display_errors', 'On');
-require_once("json-rpc.php");
-
-$service = new Service("notes.db", "config.json");
-handle_json_rpc($service);
-echo "\n";
+    $service = new Service("notes.db", "config.json");
+    handle_json_rpc($service);
+    echo "\n";
+}

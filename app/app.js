@@ -39,11 +39,19 @@ module.config([
             url: '/',
             template: '<main></main>'
         }).state({
+            name: 'activate',
+            url: '/activate/:username/:key',
+            template: '<activate></activate>'
+        }).state({
             name: 'notes',
-            url: '/notes/:tab?',
+            url: '/notes',
             template: '<notes></notes>'
         });
         $urlRouterProvider.otherwise('/');
-    }]).run(['$rootScope', 'auth', ($rootScope, auth) => {
+    }]).run(['$rootScope', '$state', 'auth', ($rootScope, $state, auth) => {
         $rootScope.auth = auth;
+        $rootScope.logout = () => {
+            auth.logout();
+            $state.go('index');
+        };
     }]);

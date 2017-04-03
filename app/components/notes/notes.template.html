@@ -1,17 +1,22 @@
-<ul class="nav nav-tabs">
+<ul class="nav nav-pills nav-stacked">
+    <li><a href="#" ng-click="ctrl.newNote(); $event.preventDefault()">New Note</a></li>
     <li role="presentation" ng-class="{active: ctrl.selected == $index}"
-        ng-repeat="tab in ctrl.tabs">
+        ng-repeat="note in ctrl.notes">
         <a href="#" ng-click="ctrl.selected = $index; $event.preventDefault()">
-            {{tab.name}}
+            <span ng-show="note.unsaved">*</span>
+            <span ng-hide="note.edit" ng-dblclick="ctrl.edit($index)">{{note.name}}</span>
+            <input ng-show="note.edit" ng-model="note.newName"
+                   ng-keyup="ctrl.input_keyup($event, $index)"/>
         </a>
         <a class="close" ng-click="ctrl.deleteNote($index); $event.stopPropagation()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>
     </li>
-    <li><a href="#" ng-click="ctrl.newTab(); $event.preventDefault()">+</a></li>
 </ul>
-<div class="tab-content">
-    <div ng-repeat="tab in ctrl.tabs" ng-show="ctrl.selected == $index">
-        <textarea ng-model="tab.content"></textarea>
+<div class="note-content">
+    <div ng-repeat="note in ctrl.notes" ng-show="ctrl.selected == $index">
+        <textarea ng-model="note.content" ng-keydown="ctrl.keydown($event, $index)"
+                  ng-keyup="ctrl.change($event, $index)">
+        </textarea>
     </div>
 </div>

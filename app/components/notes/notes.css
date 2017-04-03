@@ -1,43 +1,55 @@
 notes {
     display: block;
+    height: 100%;
 }
-.nav-tabs .glyphicon {
+notes .nav {
+    width: 200px;
+}
+notes .nav, .note-content {
+    height: 100%;
+    float: left;
+}
+notes .nav .glyphicon {
     font-size: 10px;
 }
-.nav-tabs .close {
+notes .nav .close {
     position: absolute;
     right: 0;
     top: 0;
-    padding: 2px 10px 0 10px;
+    padding: 5px 10px 0 10px;
 }
-.nav-tabs>li>a {
+.nav>li>a {
     cursor: pointer;
 }
-.nav-tabs>li[role="presentation"]>a:not(.close) {
+.nav>li.active>a input, .nav>li>a input {
+    color: black;
+    width: calc(100% - 10px);
+}
+.nav>li[role="presentation"]>a:not(.close) {
     padding-right: 30px;
 }
-.nav-tabs>li.active>a.close,
-.nav-tabs>li.active>a.close:focus,
-.nav-tabs>li.active>a.close:hover,
-.nav-tabs>li>a.close,
-.nav-tabs>li>a.close:focus,
-.nav-tabs>li>a.close:hover {
+.nav>li.active>a.close,
+.nav>li.active>a.close:focus,
+.nav>li.active>a.close:hover,
+.nav>li>a.close,
+.nav>li>a.close:focus,
+.nav>li>a.close:hover {
     cursor: pointer;
     border: none;
     background: transparent;
 }
-.tab-content {
-    height: calc(100% - 45px);
+.note-content {
+    width: calc(100% - 200px);
 }
-.tab-content div, .tab-content textarea {
+.note-content div, .note-content textarea {
     height: 100%;
 }
-.tab-content textarea {
+.note-content textarea {
     resize: none;
-    border: none;
     width: 100%;
+    box-sizing: border-box;
 }
-.tab-content textarea,
-.tab-content textarea:focus {
+.note-content textarea,
+.note-content textarea:focus {
     outline: none;
 }

@@ -1,4 +1,4 @@
-function service(rpc) {
+function service($q, rpc) {
     var token_key = 'notes_token';
     var name_key = 'notes_username';
     this.token = localStorage.getItem(token_key);
@@ -9,24 +9,24 @@ function service(rpc) {
         delete this.token;
         delete this.username;
     };
-    var set = (username, token) => {
+    this.auth = (username, token) => {
         localStorage.setItem(token_key, token);
         localStorage.setItem(name_key, username);
         this.username = username;
         this.token = token;
-    }
-    this.auth = (username, token) => {
-        set(username, token);
     };
     this.authenticated = () => {
-        return rpc.then((service) => {
-            return service.valid_token(this.username, this.token).then(function(valid) {
-                if (!valid) {
-                    clear();
-                }
-                return valid;
+        if (!this.auth_promise) {
+            this.auth_promise = rpc.then((service) => {
+                return service.valid_token(this.username, this.token).then(function(valid) {
+                    if (!valid) {
+                        clear();
+                    }
+                    return valid;
+                });
             });
-        });
+        }
+        return this.auth_promise;
     };
     this.register = (username, email, password) => {
         return rpc.then((service) => {
@@ -34,14 +34,15 @@ function service(rpc) {
         });
     };
     this.login = (username, password) => {
-        return rpc.then((service) => {
+        this.auth_promise = rpc.then((service) => {
             return service.login(username, password).then((token) => {
                 if (token) {
-                    set(username, token);
+                    this.auth(username, token);
                 }
                 return token;
             });
         });
+        return this.auth_promise;
     };
     this.activate = (key) => {
         return rpc.then((service) => {
@@ -52,9 +53,10 @@ function service(rpc) {
         return rpc.then((service) => {
             return service.logout(this.token, this.username).then(() => {
                 clear();
+                delete this.auth_promise;
             });
         });
     };
 }
-service.$inject = ['rpc'];
+service.$inject = ['$q', 'rpc'];
 export default service;
