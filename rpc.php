@@ -120,10 +120,10 @@ class Service {
         if ($token) {
             if ($this->config && $this->config->url) {
                 $message = "To activate your account open this link:\n\n" .
-                         $this->config->url . $username . "/" . $token;
+                         $this->config->url . "activate/$username/$token";
             } else {
                 $message = "To activate your account open the site to use url " .
-                         "hash:\n\n#!/$username/$token";
+                         "hash:\n\n#!/activate/$username/$token";
             }
             if ($this->send_mail($email, "registratation", $message)) {
                 return true;
