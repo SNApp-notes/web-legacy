@@ -108,7 +108,7 @@ class Service {
             throw new Exception("Can't send email no config file");
         } else {
             $version = phpversion();
-            $host = gethostname();
+            $host = $_SERVER['HTTP_HOST'];
             $headers = "From: noreplay@${host}\r\nX-Mailer: PHP/$version";
             return mail($to, $subject, $message, $headers);
         }
@@ -118,7 +118,13 @@ class Service {
     function register($username, $email, $password) {
         $token = $this->create_user($username, $email, $password);
         if ($token) {
-            $message = "Your activations key is: " . $token;
+            if ($this->config && $this->config->url) {
+                $message = "To activate your account open this link:\n\n" .
+                         $this->config->url . $username . "/" . $token;
+            } else {
+                $message = "To activate your account open the site to use url " .
+                         "hash:\n\n#!/$username/$token";
+            }
             if ($this->send_mail($email, "registratation", $message)) {
                 return true;
             } else {

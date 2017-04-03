@@ -8,6 +8,7 @@ import directives from './directives/';
 import uiRouter from 'angular-ui-router';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
+import config from './config';
 
 var module = angular.module('app', [
     uiRouter,
@@ -28,7 +29,7 @@ module.config([
      $sceProvider,
      rpcProvider,
      notificationsConfigProvider) => {
-        rpcProvider.setup('http://localhost/projects/jcubic/notes/rpc.php');
+        rpcProvider.setup(config.rpc);
         notificationsConfigProvider.setAcceptHTML(false);
         notificationsConfigProvider.setAutoHide(true);
         $stateProvider.state({
