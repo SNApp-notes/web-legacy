@@ -21,5 +21,9 @@ header li {
     font-size: 14px;
 }
 [ui-view] {
-    height: calc(100% - 33px);
+    height: calc(100% - 33px - 17px); /* header and footer */
+}
+footer {
+    font-size: 12px;
+    text-align: center;
 }

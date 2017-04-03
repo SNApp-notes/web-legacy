@@ -20,9 +20,14 @@ var module = angular.module('app', [
 module.config([
     '$stateProvider',
     '$urlRouterProvider',
+    '$sceProvider',
     'rpcProvider',
     'notificationsConfigProvider',
-    ($stateProvider, $urlRouterProvider, rpcProvider, notificationsConfigProvider) => {
+    ($stateProvider,
+     $urlRouterProvider,
+     $sceProvider,
+     rpcProvider,
+     notificationsConfigProvider) => {
         rpcProvider.setup('http://localhost/projects/jcubic/notes/rpc.php');
         notificationsConfigProvider.setAcceptHTML(false);
         notificationsConfigProvider.setAutoHide(true);
@@ -48,6 +53,7 @@ module.config([
             template: '<notes></notes>'
         });
         $urlRouterProvider.otherwise('/');
+        $sceProvider.enabled(false);
     }]).run(['$rootScope', '$state', 'auth', ($rootScope, $state, auth) => {
         $rootScope.auth = auth;
         $rootScope.logout = () => {
