@@ -5,6 +5,9 @@ notes {
 notes .nav {
     width: 200px;
 }
+notes .nav {
+    overflow: auto;
+}
 notes .nav, .note-content {
     height: 100%;
     float: left;
