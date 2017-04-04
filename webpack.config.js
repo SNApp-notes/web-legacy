@@ -18,6 +18,9 @@ module.exports = {
                 return module.context && module.context.indexOf("node_modules") !== -1;
             }
         }),
+        new webpack.DefinePlugin({
+            PRODUCTION: process.env.NODE_ENV == 'production'
+        }),
         new CopyWebpackPlugin([
             {from: 'favicon', to: 'favicon'},
             {from: 'index.html'},
@@ -51,7 +54,7 @@ module.exports = {
             {
                 test: /\.(eot|woff2?|ttf|svg)$/,
                 loader: 'file-loader' +
-                    (process.env.NODE_ENV == 'production' ? '?outputPath=/assets/' : '')
+                    (process.env.NODE_ENV == 'production' ? '?publicPath=assets/&outputPath=/assets/' : '')
             }
         ]
     }

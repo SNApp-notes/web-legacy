@@ -57,9 +57,9 @@ function notesController($state, auth, storage, notifications) {
     this.keydown = ($event, index) => {
         if ($event.ctrlKey) {
             var key = $event.key.toUpperCase();
+            var note = this.notes[index];
             if (key == 'S') {
                 $event.preventDefault();
-                var note = this.notes[index];
                 if (note.newNote) {
                     storage.create_note(auth.token, note).then((id) => {
                         note.newNote = false;
@@ -72,7 +72,7 @@ function notesController($state, auth, storage, notifications) {
                     });
                 }
             } else if (key == 'V') {
-                note.unsaved = false;
+                note.unsaved = true;
             }
         }
     };
