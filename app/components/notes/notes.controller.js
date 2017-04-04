@@ -56,7 +56,8 @@ function notesController($state, auth, storage, notifications) {
 
     this.keydown = ($event, index) => {
         if ($event.ctrlKey) {
-            if ($event.key.toUpperCase() == 'S') {
+            var key = $event.key.toUpperCase();
+            if (key == 'S') {
                 $event.preventDefault();
                 var note = this.notes[index];
                 if (note.newNote) {
@@ -70,6 +71,8 @@ function notesController($state, auth, storage, notifications) {
                         note.unsaved = false;
                     });
                 }
+            } else if (key == 'V') {
+                note.unsaved = false;
             }
         }
     };

@@ -16,7 +16,7 @@
 <div class="note-content">
     <div ng-repeat="note in ctrl.notes" ng-show="ctrl.selected == $index">
         <textarea ng-model="note.content" ng-keydown="ctrl.keydown($event, $index)"
-                  ng-keyup="ctrl.change($event, $index)">
+                  ng-keyup="ctrl.change($event, $index)" ng-trim="false">
         </textarea>
     </div>
 </div>

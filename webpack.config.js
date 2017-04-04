@@ -30,7 +30,7 @@ module.exports = {
         loaders: [
             {
                 test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
+                exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {
                     presets: ['env']
@@ -50,7 +50,8 @@ module.exports = {
             },
             {
                 test: /\.(eot|woff2?|ttf|svg)$/,
-                loader: 'file-loader'
+                loader: 'file-loader' +
+                    (process.env.NODE_ENV == 'production' ? '?outputPath=/assets/' : '')
             }
         ]
     }

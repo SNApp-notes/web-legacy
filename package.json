@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "Angular 1.5>= app for taking notes",
   "scripts": {
-    "webpack": "webpack",
-    "serve": "webpack-dev-server --hot"
+    "webpack": "NODE_ENV=production webpack",
+    "serve": "NODE_ENV=development webpack-dev-server --hot"
   },
   "repository": {
     "type": "git",

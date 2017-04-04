@@ -48,6 +48,7 @@ notes .nav .close {
     resize: none;
     width: 100%;
     box-sizing: border-box;
+    font-family: monospace;
 }
 .note-content textarea,
 .note-content textarea:focus {
