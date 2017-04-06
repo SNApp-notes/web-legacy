@@ -61,4 +61,5 @@ module.config([
             auth.logout();
             $state.go('index');
         };
+        $rootScope.year = new Date().getFullYear();
     }]);
