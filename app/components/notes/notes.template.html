@@ -5,9 +5,9 @@
         <a href="#" ng-click="ctrl.selected = $index; $event.preventDefault()">
             <span ng-show="note.unsaved">*</span>
             <span ng-hide="note.edit" ng-dblclick="ctrl.edit($index)">{{note.name}}</span>
-            <input ng-show="note.edit" ng-model="note.newName"
-                   ng-keyup="ctrl.input_keyup($event, $index)"/>
         </a>
+        <input ng-show="note.edit" ng-model="note.newName"
+               ng-keyup="ctrl.input_keyup($event, $index)"/>
         <a class="close" ng-click="ctrl.deleteNote($index); $event.stopPropagation()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
         </a>

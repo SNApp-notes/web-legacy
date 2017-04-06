@@ -24,9 +24,12 @@ notes .nav .close {
 .nav>li>a {
     cursor: pointer;
 }
-.nav>li.active>a input, .nav>li>a input {
+.nav>li.active input, .nav>li input {
     color: black;
-    width: calc(100% - 10px);
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    width: calc(100% - 40px);
 }
 .nav>li[role="presentation"]>a:not(.close) {
     padding-right: 30px;
