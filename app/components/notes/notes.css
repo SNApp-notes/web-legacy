@@ -23,6 +23,7 @@ notes .nav .close {
 }
 .nav>li>a {
     cursor: pointer;
+    min-height: 40px;
 }
 .nav>li.active input, .nav>li input {
     color: black;
