@@ -14,6 +14,7 @@ header ul {
     margin: 0;
     padding: 0;
     display: inline;
+    margin-right: 20px;
 }
 header li {
     display: inline-block;
@@ -26,4 +27,29 @@ header li {
 footer {
     font-size: 12px;
     text-align: center;
+}
+.right {
+    text-align: right;
+}
+.input-group {
+    width: 100%;
+    margin-bottom: 10px;
+}
+form[name="register"], form[name="login"] {
+    margin: auto;
+}
+form[name="register"] {
+    max-width: 400px;
+}
+form[name="login"] {
+    max-width: 300px;
+}
+form[name="register"] label.input-group-addon {
+    width: 150px;
+}
+form[name="login"] label.input-group-addon {
+    width: 100px;
+}
+label.input-group-addon {
+    text-align: right;
 }

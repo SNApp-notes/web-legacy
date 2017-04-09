@@ -1,17 +1,19 @@
 <form name="login">
-    <div>
-        <label for="username">username:</label>
-        <input type="text" id="username" name="username" placeholder="username or email"
-               ng-model="ctrl.username"/>
-    </div>
-    <div>
-        <label for="password">password:</label>
-        <input id="password" name="password" type="password" ng-model="ctrl.password" />
-    </div>
-    <div class="error" ng-show="ctrl.error">
-        {{ctrl.error}}
-    </div>
-    <div>
-        <input type="submit" ng-click="ctrl.login($event)" value="login"/>
-    </div>
+  <div class="input-group">
+    <label for="username" class="input-group-addon">username:</label>
+    <input type="text" class="form-control" id="username" name="username"
+           placeholder="username or email" ng-model="ctrl.username"/>
+  </div>
+  <div class="input-group">
+    <label for="password" class="input-group-addon">password:</label>
+    <input id="password" class="form-control" name="password" type="password"
+           ng-model="ctrl.password" />
+  </div>
+  <div class="error" ng-show="ctrl.error">
+    {{ctrl.error}}
+  </div>
+  <div class="right">
+    <input type="submit" class="btn btn-default"  ng-click="ctrl.login($event)"
+           value="login"/>
+  </div>
 </form>

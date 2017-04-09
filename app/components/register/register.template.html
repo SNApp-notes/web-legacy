@@ -1,48 +1,49 @@
 <form name="register" ng-if="!ctrl.registered">
-    <div>
-        <label for="username">username:</label>
-        <input type="text" id="username" name="username" placeholder="username"
-               ng-model="ctrl.username" required ng-model-options="{ debounce: 1000 }"
-               username-exists />
-        <div ng-if="register.username.$error.usernameExists">username already exists</div>
+  <div class="input-group">
+    <label for="username" class="input-group-addon">username:</label>
+    <input type="text" id="username" class="form-control" name="username"
+           placeholder="username" ng-model="ctrl.username" required
+           ng-model-options="{ debounce: 1000 }" username-exists />
+    <div ng-if="register.username.$error.usernameExists">username already exists</div>
+  </div>
+  <div class="input-group">
+    <label for="email" class="input-group-addon">email:</label>
+    <input type="email" class="form-control" id="email" name="email"
+           placeholder="me@example.com" ng-model="ctrl.email" required/>
+    <div class="error" ng-show="register.email.$error.required">Field required</div>
+    <div class="error" ng-show="register.email.$error.email">Invalid email address</div>
+  </div>
+  <div class="input-group">
+    <label for="password" class="input-group-addon">password:</label>
+    <input id="password" class="form-control" name="password" type="password"
+           required ng-model="ctrl.password" />
+    <div class="error" ng-show="register.password.$error.required">Field required</div>
+  </div>
+  <div class="input-group">
+    <label for="confirm_password" class="input-group-addon">confirm password:</label>
+    <input id="confirm_password" class="form-control" name="confirm_password"
+           type="password" ng-model="ctrl.confirm_password" required
+           password-match="ctrl.password"/>
+    <div class="error" ng-show="register.confirm_password.$error.required">
+      Field required
     </div>
-    <div>
-        <label for="email">email:</label>
-        <input type="email" id="email" name="email" placeholder="me@example.com"
-               ng-model="ctrl.email" required/>
-        <div class="error" ng-show="register.email.$error.required">Field required</div>
-        <div class="error" ng-show="register.email.$error.email">Invalid email address</div>
+    <div class="error" ng-show="register.confirm_password.$error.passwordMatch">
+      Passwords don't match
     </div>
-    <div>
-        <label for="password">password:</label>
-        <input id="password" name="password" type="password" required
-               ng-model="ctrl.password" />
-        <div class="error" ng-show="register.password.$error.required">Field required</div>
-    </div>
-    <div>
-        <label for="confirm_password">confirm password:</label>
-        <input id="confirm_password" name="confirm_password" type="password"
-               ng-model="ctrl.confirm_password" required password-match="ctrl.password"/>
-        <div class="error" ng-show="register.confirm_password.$error.required">
-            Field required
-        </div>
-        <div class="error" ng-show="register.confirm_password.$error.passwordMatch">
-            Passwords don't match
-        </div>
-    </div>
-    <div class="error">
-        <span ng-show="ctrl.error">{{ctrl.error}}</span>
-    </div>
-    <div>
-        <input type="submit" ng-disabled="register.$invalid" ng-click="ctrl.register($event)"
-               value="register"/>
-    </div>
+  </div>
+  <div class="error">
+    <span ng-show="ctrl.error">{{ctrl.error}}</span>
+  </div>
+  <div class="right">
+    <input type="submit" class="btn btn-default" ng-disabled="register.$invalid"
+           ng-click="ctrl.register($event)" value="register"/>
+  </div>
 </form>
 <div ng-if="ctrl.registered">
-    <div ng-show="ctrl.error">
-        {{ctrl.error}}
-    </div>
-    <div ng-hide="ctrl.error">
-        Confirmation email sent
-    </div>
+  <div ng-show="ctrl.error">
+    {{ctrl.error}}
+  </div>
+  <div ng-hide="ctrl.error">
+    Confirmation email sent
+  </div>
 </div>
