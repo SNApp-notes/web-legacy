@@ -1,9 +1,11 @@
 RewriteEngine on
 
-
 Header set Access-Control-Allow-Origin "*"
 Header set Access-Control-Allow-Headers "Content-Type"
 Header set Access-Control-Allow-Methods "POST, GET, OPTIONS"
 
 RewriteRule ^/?config\.json$ - [F,L]
 RewriteRule ^/?notes.db$ - [F,L]
+
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R]
