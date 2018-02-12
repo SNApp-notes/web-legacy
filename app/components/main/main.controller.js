@@ -4,7 +4,7 @@ function mainController($state, auth) {
     this.svg = svg;
     auth.authenticated().then((authenticated) => {
         if (authenticated) {
-            $state.go('notes');
+            $state.go('notes', {id: null});
         }
     });
 }
