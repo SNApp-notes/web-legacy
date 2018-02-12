@@ -23,21 +23,21 @@
   "homepage": "https://github.com/jcubic/notes#readme",
   "dependencies": {},
   "devDependencies": {
-    "angular": "^1.6.3",
-    "angular-ui-router": "^0.4.2",
-    "babel-core": "^6.24.0",
+    "@uirouter/angularjs": "^1.0.15",
+    "angular": "^1.6.9",
+    "babel-core": "^6.26.0",
     "babel-loader": "^6.4.1",
-    "babel-preset-env": "^1.2.2",
+    "babel-preset-env": "^1.6.1",
     "bootstrap": "^3.3.7",
-    "copy-webpack-plugin": "^4.0.1",
+    "copy-webpack-plugin": "^4.4.1",
     "css-loader": "^0.27.3",
-    "expose-loader": "^0.7.3",
+    "expose-loader": "^0.7.4",
     "file-loader": "^0.10.1",
     "html-loader": "^0.4.5",
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "ng-notifications-bar": "0.0.16",
     "style-loader": "^0.16.0",
-    "webpack": "^2.3.2",
-    "webpack-dev-server": "^2.4.2"
+    "webpack": "^2.7.0",
+    "webpack-dev-server": "^2.11.1"
   }
 }

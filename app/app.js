@@ -5,7 +5,7 @@ import ngNotificationsBar from 'ng-notifications-bar';
 import components from './components/';
 import services from './services/';
 import directives from './directives/';
-import uiRouter from 'angular-ui-router';
+import uiRouter from '@uirouter/angularjs';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 import config from './config';
@@ -50,7 +50,7 @@ module.config([
             template: '<activate></activate>'
         }).state({
             name: 'notes',
-            url: '/notes',
+            url: '/notes/:id?',
             template: '<notes></notes>'
         });
         $urlRouterProvider.otherwise('/');

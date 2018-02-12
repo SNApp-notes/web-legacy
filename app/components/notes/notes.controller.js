@@ -5,7 +5,11 @@ function notesController($state, auth, storage, notifications) {
         if (authenticated) {
             storage.get_notes(auth.token, auth.username).then((notes) => {
                 this.notes = notes;
-                this.selected = 0;
+                if ($state.params.id > 0 && $state.params.id < notes.length) {
+                    this.selected = $state.params.id;
+                } else {
+                    this.selected = 0;
+                }
             }).catch((error) => {
                 notifications.showError({message: error});
             });
