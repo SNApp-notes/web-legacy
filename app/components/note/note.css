@@ -1,0 +1,63 @@
+notes {
+    display: block;
+    height: 100%;
+}
+notes .nav {
+    width: 200px;
+}
+notes .nav {
+    overflow: auto;
+}
+notes .nav, .note-content {
+    height: 100%;
+    float: left;
+}
+notes .nav .glyphicon {
+    font-size: 10px;
+}
+notes .nav .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 5px 10px 0 10px;
+}
+.nav>li>a {
+    cursor: pointer;
+    min-height: 40px;
+}
+.nav>li.active input, .nav>li input {
+    color: black;
+    position: absolute;
+    left: 10px;
+    top: 7px;
+    width: calc(100% - 40px);
+}
+.nav>li[role="presentation"]>a:not(.close) {
+    padding-right: 30px;
+}
+.nav>li.active>a.close,
+.nav>li.active>a.close:focus,
+.nav>li.active>a.close:hover,
+.nav>li>a.close,
+.nav>li>a.close:focus,
+.nav>li>a.close:hover {
+    cursor: pointer;
+    border: none;
+    background: transparent;
+}
+.note-content {
+    width: calc(100% - 200px);
+}
+.note-content div, .note-content textarea {
+    height: 100%;
+}
+.note-content textarea {
+    resize: none;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: monospace;
+}
+.note-content textarea,
+.note-content textarea:focus {
+    outline: none;
+}

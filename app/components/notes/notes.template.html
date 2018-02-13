@@ -2,7 +2,7 @@
     <li><a href="#" ng-click="ctrl.newNote(); $event.preventDefault()">New Note</a></li>
     <li role="presentation" ng-class="{active: ctrl.selected == $index}"
         ng-repeat="note in ctrl.notes">
-        <a ui-sref="notes({id: $index})">
+        <a ui-sref="notes.note({id: $index})">
             <span ng-show="note.unsaved">*</span>
             <span ng-hide="note.edit" ng-dblclick="ctrl.edit($index)">{{note.name}}</span>
         </a>
@@ -13,10 +13,4 @@
         </a>
     </li>
 </ul>
-<div class="note-content">
-    <div ng-repeat="note in ctrl.notes" ng-show="ctrl.selected == $index">
-        <textarea ng-model="note.content" ng-keydown="ctrl.keydown($event, $index)"
-                  ng-keyup="ctrl.change($event, $index)" ng-trim="false">
-        </textarea>
-    </div>
-</div>
+<div class="note-content" ui-view></div>

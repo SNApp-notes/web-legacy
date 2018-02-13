@@ -50,8 +50,12 @@ module.config([
             template: '<activate></activate>'
         }).state({
             name: 'notes',
-            url: '/notes/:id?',
+            url: '/notes/',
             template: '<notes></notes>'
+        }).state({
+            name: 'notes.note',
+            url: ':id',
+            template: '<note></note>'
         });
         $urlRouterProvider.otherwise('/');
         $sceProvider.enabled(false);

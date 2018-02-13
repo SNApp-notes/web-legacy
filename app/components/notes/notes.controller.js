@@ -1,14 +1,17 @@
-function notesController($state, auth, storage, notifications) {
+function notesController($scope, $state, auth, storage, notifications) {
     this.notes = [];
-
+    $scope.$on('change', () => {
+        this.selected = $state.params.id;
+    });
     auth.authenticated().then((authenticated) => {
         if (authenticated) {
-            storage.get_notes(auth.token, auth.username).then((notes) => {
+            storage.get_notes().then((notes) => {
                 this.notes = notes;
                 if ($state.params.id > 0 && $state.params.id < notes.length) {
                     this.selected = $state.params.id;
                 } else {
                     this.selected = 0;
+                    $state.go('notes.note', {id: 0});
                 }
             }).catch((error) => {
                 notifications.showError({message: error});
@@ -51,7 +54,7 @@ function notesController($state, auth, storage, notifications) {
             if (note.newNote) {
                 this.notes.splice(index, 1);
             } else {
-                storage.remove_note(auth.token, note.id).then((success) => {
+                storage.remove_note(note.id).then((success) => {
                     this.notes.splice(index, 1);
                 });
             }
@@ -65,13 +68,13 @@ function notesController($state, auth, storage, notifications) {
             if (key == 'S') {
                 $event.preventDefault();
                 if (note.newNote) {
-                    storage.create_note(auth.token, note).then((id) => {
+                    storage.create_note(note).then((id) => {
                         note.newNote = false;
                         note.id = id;
                         note.unsaved = false;
                     });
                 } else {
-                    storage.save_note(auth.token, note).then(()=> {
+                    storage.save_note(note).then(()=> {
                         note.unsaved = false;
                     });
                 }
@@ -81,10 +84,11 @@ function notesController($state, auth, storage, notifications) {
         }
     };
     this.change = ($event, index) => {
-        if (!$event.ctrlKey && $event.key.toUpperCase() != 'CONTROL') {
+        var key = $event.key.toUpperCase();
+        if (!$event.ctrlKey && key != 'CONTROL' && !key.math(/ARROW|PAGE/)) {
             this.notes[index].unsaved = true;
         }
     };
 }
-notesController.$inject = ['$state', 'auth', 'storage', 'notifications'];
+notesController.$inject = ['$scope', '$state', 'auth', 'storage', 'notifications'];
 export default notesController;

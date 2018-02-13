@@ -1,22 +1,22 @@
 function storageService(rpc, auth) {
-    this.create_note = (token, note) => {
+    this.create_note = (note) => {
         return rpc.then((service) => {
-            return service.create_note(token, auth.username, note);
+            return service.create_note(auth.token, auth.username, note);
         });
     };
-    this.save_note = (token, note) => {
+    this.save_note = (note) => {
         return rpc.then((service) => {
-            return service.save_note(token, auth.username, note);
+            return service.save_note(auth.token, auth.username, note);
         });
     };
-    this.get_notes = (token) => {
+    this.get_notes = () => {
         return rpc.then((service) => {
-            return service.get_notes(token, auth.username);
+            return service.get_notes(auth.token, auth.username);
         });
     };
-    this.remove_note = (token, note_id) => {
+    this.remove_note = (note_id) => {
         return rpc.then((service) => {
-            return service.remove_note(token, auth.username, note_id);
+            return service.remove_note(auth.token, auth.username, note_id);
         });
     };
 }

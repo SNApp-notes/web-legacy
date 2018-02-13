@@ -21,7 +21,7 @@ header li {
     margin: 5px;
     font-size: 14px;
 }
-[ui-view] {
+body > [ui-view] {
     height: calc(100% - 33px - 17px); /* header and footer */
 }
 footer {
