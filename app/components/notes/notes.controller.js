@@ -85,7 +85,7 @@ function notesController($scope, $state, auth, storage, notifications) {
     };
     this.change = ($event, index) => {
         var key = $event.key.toUpperCase();
-        if (!$event.ctrlKey && key != 'CONTROL' && !key.math(/ARROW|PAGE/)) {
+        if (!$event.ctrlKey && key != 'CONTROL' && !key.match(/ARROW|PAGE/)) {
             this.notes[index].unsaved = true;
         }
     };
