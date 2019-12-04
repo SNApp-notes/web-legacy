@@ -10,14 +10,33 @@ module.exports = {
         path: path.resolve('./dist'),
         filename: "[name].js"
     },
-    plugins: [
-        new webpack.optimize.CommonsChunkPlugin({
-            name: "vendor",
-            minChunks: function (module) {
-                // this assumes your vendor imports exist in the node_modules directory
-                return module.context && module.context.indexOf("node_modules") !== -1;
+    optimization: {
+        splitChunks: {
+            chunks: 'async',
+            minSize: 30000,
+            maxSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 6,
+            maxInitialRequests: 4,
+            automaticNameDelimiter: '~',
+            automaticNameMaxLength: 30,
+            cacheGroups: {
+                vendor: {
+                    test: /node_modules/,
+                    name: 'vendor',
+                    priority: -10,
+                    chunks: 'all',
+                    enforce: true
+                },
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true
+                }
             }
-        }),
+        }
+    },
+    plugins: [
         new webpack.DefinePlugin({
             PRODUCTION: process.env.NODE_ENV == 'production'
         }),
@@ -30,7 +49,7 @@ module.exports = {
         ])
     ],
     module: {
-        loaders: [
+        rules: [
             { test: /angular(\.min)?\.js$/, loader: "imports-loader?$=jquery" },
             { test: /jquery(\.min)?\.js$/, loader: 'expose-loader?jQuery' },
             {
@@ -38,7 +57,7 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {
-                    presets: ['env']
+                    presets: ['@babel/preset-env']
                 }
             },
             {
