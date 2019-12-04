@@ -17,5 +17,5 @@ All files will be in dist directory you need to copy those files to the server
 
 Licensed under [MIT](http://opensource.org/licenses/MIT) license
 
-Copyright (c) 2017 [Jakub T. Jankiewicz](https://jcubic.pl/me)
+Copyright (c) 2017-2019 [Jakub T. Jankiewicz](https://jcubic.pl/me)
 
