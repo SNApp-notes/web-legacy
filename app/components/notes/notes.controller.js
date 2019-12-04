@@ -1,12 +1,37 @@
-function notesController($scope, $state, auth, storage, notifications) {
+function getSections(text) {
+    var re = /(-+\n:: .*\n-+)/;
+    var line = 0;
+    var result = [];
+    var parts = text.split(re).filter(Boolean);
+    for (let part of parts) {
+        const match = part.match(/:: (.*)/);
+        var m = part.match(/\n/g);
+        line += m ? m.length : 1;
+        if (match) {
+            result.push({label: match[1], line: line - 2});
+        }
+    }
+    return result;
+}
+function notesController($scope, $state, auth, storage, notifications, stateEmitter) {
     this.notes = [];
+    console.log('emit');
+    stateEmitter.emit('note', $state.params.id || 0);
     $scope.$on('change', () => {
         this.selected = $state.params.id;
+        stateEmitter.emit('note', this.selected);
+    });
+    $scope.$on('scrollTo', (line) => {
+        $scope.$broadcast('scrollTo', line);
     });
     auth.authenticated().then((authenticated) => {
         if (authenticated) {
             storage.get_notes().then((notes) => {
                 this.notes = notes;
+                Object.keys(notes).forEach(key => {
+                    const {content} = notes[key];
+                    notes[key].sections = getSections(content);
+                });
                 if ($state.params.id > 0 && $state.params.id < notes.length) {
                     this.selected = $state.params.id;
                 } else {
@@ -87,9 +112,14 @@ function notesController($scope, $state, auth, storage, notifications) {
     this.change = ($event, index) => {
         var key = $event.key.toUpperCase();
         if (!$event.ctrlKey && key != 'CONTROL' && !key.match(/ARROW|PAGE|END|HOME/)) {
-            this.notes[index].unsaved = true;
+            const note = this.notes[index];
+            const {content} = note;
+            note.sections = getSections(content);
+            note.unsaved = true;
         }
     };
 }
-notesController.$inject = ['$scope', '$state', 'auth', 'storage', 'notifications'];
+notesController.$inject = [
+    '$scope', '$state', 'auth', 'storage', 'notifications', 'stateEmitter'
+];
 export default notesController;

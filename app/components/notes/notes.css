@@ -1,6 +1,7 @@
 notes {
     display: block;
     height: 100%;
+    position: relative;
 }
 notes div.nav {
     width: 200px;

@@ -1,6 +1,7 @@
 .note-content {
     width: calc(100% - 200px);
     position: relative;
+    border: 1px solid var(--border-color);
 }
 .note-content::before {
     width: calc(80ch - 4px);
@@ -13,17 +14,23 @@
     z-index: 1000;
     pointer-events: none;
 }
-.note-content textarea, .note-content::before {
+.note-content textarea, .note-content::before, .note-content .tmp {
     font-family: monospace;
 }
-.note-content div, .note-content textarea {
-    height: 100%;
+before, .note-content .tmp {
+    position: absolute;
+    pointer-events: none;
+    visibility: hidden;
+    top: 0;
+    left: 0;
+}
+.note-content textarea {
 }
 .note-content textarea {
     resize: none;
-    width: 100%;
+    height: 100%;
+    width: calc(100% - 300px);
     box-sizing: border-box;
-    border: 1px solid #aaa;
 }
 .note-content textarea,
 .note-content textarea:focus {

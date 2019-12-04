@@ -6,6 +6,9 @@ export default {
     require: {
         parent: '^^notes'
     },
+    bindings: {
+        'scroll': '='
+    },
     template,
     controller,
     controllerAs: 'ctrl'

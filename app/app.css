@@ -2,6 +2,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100vh;
+    --border-color: #ccc;
 }
 input.ng-untouched ~ .error {
     display: none;

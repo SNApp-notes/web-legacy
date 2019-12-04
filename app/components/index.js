@@ -5,6 +5,8 @@ import register_component from './register/register.component';
 import notes_component from './notes/notes.component';
 import note_component from './note/note.component';
 import activate_component from './activate/activate.component';
+import sections_component from './sections/sections.component';
+
 
 var module = angular.module('components', [])
     .component('main', main_component)
@@ -12,6 +14,7 @@ var module = angular.module('components', [])
     .component('register', register_component)
     .component('notes', notes_component)
     .component('note', note_component)
-    .component('activate', activate_component);
+    .component('activate', activate_component)
+    .component('sections', sections_component);
 
 export default module;

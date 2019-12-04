@@ -1,0 +1,16 @@
+sections {
+    position: absolute;
+    right: 0;
+    top: 1px;
+    bottom: 1px;
+    overflow: auto;
+    background: white;
+    z-index: 2000;
+    width: 300px;
+}
+sections ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    padding-left: 10px;
+}
