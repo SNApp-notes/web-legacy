@@ -2,18 +2,36 @@ notes {
     display: block;
     height: 100%;
 }
-notes .nav {
+notes div.nav {
     width: 200px;
 }
-notes .nav {
-    overflow: auto;
+ul.actions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background: white;
+    border-bottom: 1px solid #ccc;
 }
-notes .nav, .note-content {
+.actions li input, .actions li button {
+    width: calc(100% - 10px);
+    margin: 5px;
+}
+.actions li button {
+    margin: 0 5px;
+}
+notes div .nav:last-of-type {
+    overflow: auto;
+    height: calc(100% - 79px);
+}
+notes div.nav, .note-content {
     height: 100%;
     float: left;
 }
 notes .nav .glyphicon {
     font-size: 10px;
+}
+.nav button {
+    width: 100%;
 }
 notes .nav .close {
     position: absolute;
@@ -45,19 +63,4 @@ notes .nav .close {
     border: none;
     background: transparent;
 }
-.note-content {
-    width: calc(100% - 200px);
-}
-.note-content div, .note-content textarea {
-    height: 100%;
-}
-.note-content textarea {
-    resize: none;
-    width: 100%;
-    box-sizing: border-box;
-    font-family: monospace;
-}
-.note-content textarea,
-.note-content textarea:focus {
-    outline: none;
-}
+

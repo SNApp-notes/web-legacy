@@ -1,8 +1,17 @@
-<ul class="nav nav-pills nav-stacked">
-    <li><a href="#" ng-click="ctrl.newNote(); $event.preventDefault()">New Note</a></li>
+<div class="nav">
+  <ul class="actions">
+    <li>
+      <button class="btn btn-primary"
+              ng-click="ctrl.newNote(); $event.preventDefault()">New Note</button>
+    </li>
+    <li>
+      <input class="form-control" ng-model="filter" placeholder="filter" />
+    </li>
+  </ul>
+  <ul class="nav nav-pills nav-stacked">
     <li role="presentation" ng-class="{active: ctrl.selected == $index}"
         scroll-to="ctrl.selected == $index || note.newNote" parent="ul.nav"
-        ng-repeat="note in ctrl.notes">
+        ng-repeat="note in ctrl.notes | filter: {name: filter}">
         <a ui-sref="notes.note({id: $index})">
             <span ng-show="note.unsaved">*</span>
             <span ng-hide="note.edit" ng-dblclick="ctrl.edit($index)">{{note.name}}</span>
@@ -15,4 +24,5 @@
         </a>
     </li>
 </ul>
+</div>
 <div class="note-content" ui-view></div>
