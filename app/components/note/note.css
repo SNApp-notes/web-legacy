@@ -25,12 +25,12 @@ before, .note-content .tmp {
     left: 0;
 }
 .note-content textarea {
-}
-.note-content textarea {
     resize: none;
     height: 100%;
     width: calc(100% - 300px);
     box-sizing: border-box;
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 .note-content textarea,
 .note-content textarea:focus {
