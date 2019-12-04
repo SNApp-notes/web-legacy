@@ -3,7 +3,7 @@
     position: relative;
 }
 .note-content::before {
-    width: 80ch;
+    width: calc(80ch - 4px);
     content: '';
     display: block;
     position: absolute;
@@ -13,7 +13,9 @@
     z-index: 1000;
     pointer-events: none;
 }
-
+.note-content textarea, .note-content::before {
+    font-family: monospace;
+}
 .note-content div, .note-content textarea {
     height: 100%;
 }
@@ -21,7 +23,6 @@
     resize: none;
     width: 100%;
     box-sizing: border-box;
-    font-family: monospace;
     border: 1px solid #aaa;
 }
 .note-content textarea,
