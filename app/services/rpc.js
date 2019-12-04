@@ -17,6 +17,9 @@ export default function() {
         }
         var defer = $q.defer();
         return rpc('system.describe').then(data => {
+            if (data.error) {
+                throw data.error.message;
+            }
             var service = {};
             data.procs.forEach(spec => {
                 service[spec.name] = function(...args) {

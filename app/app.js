@@ -62,8 +62,9 @@ module.config([
     }]).run(['$rootScope', '$state', 'auth', ($rootScope, $state, auth) => {
         $rootScope.auth = auth;
         $rootScope.logout = () => {
-            auth.logout();
-            $state.go('index');
+            auth.logout().then(() => {
+                $state.go('index');
+            });
         };
         $rootScope.year = new Date().getFullYear();
     }]);

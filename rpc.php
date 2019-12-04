@@ -2,6 +2,9 @@
 
 class Service {
     function __construct($db, $config) {
+        if (!is_writable($db)) {
+            throw new Exception("Database file $db is not writtable");
+        }
         $this->db = new PDO('sqlite:' . $db);
         $this->init();
         $config_name = "config.json";
@@ -268,8 +271,11 @@ if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] != 'OPTIONS
     error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
     ini_set('display_errors', 'On');
     require_once("json-rpc.php");
-
-    $service = new Service("notes.db", "config.json");
-    handle_json_rpc($service);
-    echo "\n";
+    try {
+        $service = new Service("notes.db", "config.json");
+        handle_json_rpc($service);
+        echo "\n";
+    } catch (Exception $e) {
+        echo response(null, null, array("message" => $e->getMessage()));
+    }
 }

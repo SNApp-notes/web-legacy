@@ -8,4 +8,5 @@ RewriteRule ^/?config\.json$ - [F,L]
 RewriteRule ^/?notes.db$ - [F,L]
 
 RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} !localhost
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R]
