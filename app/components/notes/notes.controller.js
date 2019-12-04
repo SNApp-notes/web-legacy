@@ -26,6 +26,7 @@ function notesController($scope, $state, auth, storage, notifications) {
         this.notes.push({
             name: 'new Note ' + index++,
             content: '',
+            edit: true,
             newNote: true,
             unsaved: true
         });

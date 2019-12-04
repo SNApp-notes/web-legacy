@@ -7,8 +7,9 @@ function scrollTo() {
         },
         link: function($scope, $elm) {
             if ($scope.scrollTo) {
+                var $parent = $elm.closest($scope.parent);
                 var {top} = $elm.offset();
-                $elm.closest($scope.parent).scrollTop(top);
+                $parent.scrollTop(top + $parent.scrollTop());
             }
         }
     };

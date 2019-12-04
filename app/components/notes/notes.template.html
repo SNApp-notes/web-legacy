@@ -1,13 +1,14 @@
 <ul class="nav nav-pills nav-stacked">
     <li><a href="#" ng-click="ctrl.newNote(); $event.preventDefault()">New Note</a></li>
     <li role="presentation" ng-class="{active: ctrl.selected == $index}"
-        scroll-to="ctrl.selected == $index" parent="ul.nav"
+        scroll-to="ctrl.selected == $index || note.newNote" parent="ul.nav"
         ng-repeat="note in ctrl.notes">
         <a ui-sref="notes.note({id: $index})">
             <span ng-show="note.unsaved">*</span>
             <span ng-hide="note.edit" ng-dblclick="ctrl.edit($index)">{{note.name}}</span>
         </a>
         <input ng-show="note.edit" ng-model="note.newName"
+               autofocus="note.edit"
                ng-keyup="ctrl.input_keyup($event, $index)"/>
         <a class="close" ng-click="ctrl.deleteNote($index); $event.stopPropagation()">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
