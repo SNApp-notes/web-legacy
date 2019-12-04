@@ -1,6 +1,7 @@
 <ul class="nav nav-pills nav-stacked">
     <li><a href="#" ng-click="ctrl.newNote(); $event.preventDefault()">New Note</a></li>
     <li role="presentation" ng-class="{active: ctrl.selected == $index}"
+        scroll-to="ctrl.selected == $index" parent="ul.nav"
         ng-repeat="note in ctrl.notes">
         <a ui-sref="notes.note({id: $index})">
             <span ng-show="note.unsaved">*</span>

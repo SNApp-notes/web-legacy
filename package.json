@@ -34,6 +34,7 @@
     "expose-loader": "^0.7.4",
     "file-loader": "^0.10.1",
     "html-loader": "^0.4.5",
+    "imports-loader": "^0.8.0",
     "jquery": "^3.4.1",
     "ng-notifications-bar": "0.0.16",
     "style-loader": "^0.16.0",

@@ -1,5 +1,4 @@
 import angular from 'angular';
-import 'jquery';
 import 'ng-notifications-bar/dist/ngNotificationsBar.min.css';
 import ngNotificationsBar from 'ng-notifications-bar';
 import components from './components/';

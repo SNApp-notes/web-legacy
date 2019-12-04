@@ -31,6 +31,8 @@ module.exports = {
     ],
     module: {
         loaders: [
+            { test: /angular(\.min)?\.js$/, loader: "imports-loader?$=jquery" },
+            { test: /jquery(\.min)?\.js$/, loader: 'expose-loader?jQuery' },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -38,10 +40,6 @@ module.exports = {
                 query: {
                     presets: ['env']
                 }
-            },
-            {
-                test: /jquery(\.min)?\.js$/,
-                loader: 'expose-loader?jQuery'
             },
             {
                 test: /\.html$/,
