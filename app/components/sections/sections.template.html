@@ -1,7 +1,8 @@
 <ul>
   <li ng-repeat="section in ctrl.parent.notes[ctrl.id].sections">
-    <a href="#" ng-click="ctrl.scrollToEvent($event, section.line); $event.preventDefault()">
-      {{section.label}} [{{section.line}}]
+    <a ui-sref="notes.note.section({section: section.line})"
+       ui-sref-active="active">
+      {{section.label}}
     </a>
   </li>
 </ul>

@@ -55,15 +55,27 @@ module.config([
             name: 'notes.note',
             url: ':id',
             template: '<note></note>'
+        }).state({
+            name: 'notes.note.section',
+            url: '/:section',
+            params: {
+                section: {squash: true, value: null}
+            }
         });
         $urlRouterProvider.otherwise('/');
         $sceProvider.enabled(false);
-    }]).run(['$rootScope', '$state', 'auth', ($rootScope, $state, auth) => {
-        $rootScope.auth = auth;
-        $rootScope.logout = () => {
-            auth.logout().then(() => {
-                $state.go('index');
+    }]).run(['$rootScope', '$state', '$transitions', 'auth', 'stateEmitter', (
+        $rootScope, $state, $transitions, auth, stateEmitter) => {
+            $rootScope.auth = auth;
+            $rootScope.logout = () => {
+                auth.logout().then(() => {
+                    $state.go('index');
+                });
+            };
+            $transitions.onSuccess({entering: 'notes.note.section'}, function(transition) {
+                if (transition.$to().name === "notes.note.section") {
+                    stateEmitter.emit('scrollTo', +$state.params.section);
+                }
             });
-        };
-        $rootScope.year = new Date().getFullYear();
-    }]);
+            $rootScope.year = new Date().getFullYear();
+        }]);

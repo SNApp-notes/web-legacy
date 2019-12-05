@@ -1,4 +1,4 @@
-function noteController($scope, $state, $element, stateEmitter, charSize) {
+function noteController($rootScope, $scope, $state, $element, stateEmitter, charSize) {
     this.id = $state.params.id;
     $scope.$emit('change');
     var area = $element.find('textarea');
@@ -13,5 +13,7 @@ function noteController($scope, $state, $element, stateEmitter, charSize) {
     });
 }
 
-noteController.$inject = ['$scope', '$state', '$element', 'stateEmitter', 'charSize'];
+noteController.$inject = [
+    '$rootScope', '$scope', '$state', '$element', 'stateEmitter', 'charSize'
+];
 export default noteController;

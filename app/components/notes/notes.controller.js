@@ -17,7 +17,9 @@ function getSections(text, numChars) {
     return result;
 }
 import $ from 'jquery';
-function notesController($scope, $state, auth, storage, notifications, stateEmitter, charSize) {
+function notesController(
+    $scope, $state, $timeout, auth, storage, notifications, stateEmitter, charSize
+) {
     this.notes = [];
     var numChars;
     
@@ -51,6 +53,11 @@ function notesController($scope, $state, auth, storage, notifications, stateEmit
                 } else {
                     this.selected = 0;
                     $state.go('notes.note', {id: 0});
+                }
+                if ($state.params.section) {
+                    $timeout(() => {
+                        stateEmitter.emit('scrollTo', +$state.params.section);
+                    }, 0);
                 }
             }).catch((error) => {
                 notifications.showError({message: error});
@@ -125,15 +132,17 @@ function notesController($scope, $state, auth, storage, notifications, stateEmit
     };
     this.change = ($event, index) => {
         var key = $event.key.toUpperCase();
-        if (!$event.ctrlKey && key != 'CONTROL' && !key.match(/ARROW|PAGE|END|HOME/)) {
-            const note = this.notes[index];
-            const {content} = note;
-            note.sections = getSections(content, numChars);
-            note.unsaved = true;
-        }
+        if ((!$event.ctrlKey && key != 'CONTROL' && !key.match(/ARROW|PAGE|END|HOME/)) ||
+            ($event.ctrlKey && ['X', 'V'].includes(key))) {
+                const note = this.notes[index];
+                const {content} = note;
+                note.sections = getSections(content, numChars);
+                note.unsaved = true;
+            }
     };
 }
 notesController.$inject = [
-    '$scope', '$state', 'auth', 'storage', 'notifications', 'stateEmitter', 'charSize'
+    '$scope', '$state', '$timeout', 'auth', 'storage',
+    'notifications', 'stateEmitter', 'charSize'
 ];
 export default notesController;
