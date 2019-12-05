@@ -1,13 +1,17 @@
-function noteController($scope, $state, $element, stateEmitter) {
+function noteController($scope, $state, $element, stateEmitter, charSize) {
     this.id = $state.params.id;
     $scope.$emit('change');
-    var tmp = $element.find('.tmp');
-    var rect = tmp[0].getBoundingClientRect();
     var area = $element.find('textarea');
+
+    this.onResize = () => {
+        stateEmitter.emit('width', $element.find('.wrapper').innerWidth());
+    };
+    this.onResize();
+
     stateEmitter.on('scrollTo', (line) => {
-        area.scrollTop(rect.height * line);
+        area.scrollTop(charSize.height * line);
     });
 }
 
-noteController.$inject = ['$scope', '$state', '$element', 'stateEmitter'];
+noteController.$inject = ['$scope', '$state', '$element', 'stateEmitter', 'charSize'];
 export default noteController;

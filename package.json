@@ -6,6 +6,9 @@
     "webpack": "NODE_ENV=production webpack",
     "serve": "NODE_ENV=development webpack-dev-server --hot"
   },
+    "_moduleAliases": {
+        "jquery.resize": "../resize"
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jcubic/notes.git"
@@ -36,6 +39,7 @@
     "html-loader": "^0.5.5",
     "imports-loader": "^0.8.0",
     "jquery": "^3.4.1",
+    "jquery.resize": "^1.0.1",
     "ng-notifications-bar": "0.0.16",
     "style-loader": "^1.0.1",
     "webpack": "^4.41.2",

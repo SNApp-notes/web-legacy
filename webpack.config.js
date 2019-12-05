@@ -10,6 +10,11 @@ module.exports = {
         path: path.resolve('./dist'),
         filename: "[name].js"
     },
+    resolve: {
+        alias: {
+            'jquery.resize$': path.resolve(__dirname, '../resize/jquery.resize.js')
+        }
+    },
     optimization: {
         splitChunks: {
             chunks: 'async',
@@ -50,6 +55,10 @@ module.exports = {
     ],
     module: {
         rules: [
+            {
+                test: /[\/\\]node_modules[\/\\]some-module[\/\\]index\.js$/,
+                loader: "imports-loader?define=>false"
+            },
             { test: /angular(\.min)?\.js$/, loader: "imports-loader?$=jquery" },
             { test: /jquery(\.min)?\.js$/, loader: 'expose-loader?jQuery' },
             {

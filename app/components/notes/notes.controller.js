@@ -1,22 +1,34 @@
-function getSections(text) {
+function getSections(text, numChars) {
     var re = /(-+\n:: .*\n-+)/;
     var line = 0;
     var result = [];
     var parts = text.split(re).filter(Boolean);
     for (let part of parts) {
         const match = part.match(/:: (.*)/);
-        var m = part.match(/\n/g);
-        line += m ? m.length : 1;
+        var lines = part.replace(/(^\n)|(\n$)/g, '').split(/\n/);
+        var count = lines.map(line => {
+            return line.length == 0 ? 1 : Math.ceil(line.length / numChars);
+        }).reduce((a,b) => a + b, 0);
         if (match) {
-            result.push({label: match[1], line: line - 2});
+            result.push({label: match[1], line});
         }
+        line += count;
     }
     return result;
 }
-function notesController($scope, $state, auth, storage, notifications, stateEmitter) {
+import $ from 'jquery';
+function notesController($scope, $state, auth, storage, notifications, stateEmitter, charSize) {
     this.notes = [];
-    console.log('emit');
+    var numChars;
+    
     stateEmitter.emit('note', $state.params.id || 0);
+    stateEmitter.on('width', (width) => {
+        numChars = Math.floor(width / charSize.width);
+        const note = this.notes[this.selected];
+        if (note) {
+            note.sections = getSections(note.content, numChars);
+        }
+    });
     $scope.$on('change', () => {
         this.selected = $state.params.id;
         stateEmitter.emit('note', this.selected);
@@ -28,10 +40,12 @@ function notesController($scope, $state, auth, storage, notifications, stateEmit
         if (authenticated) {
             storage.get_notes().then((notes) => {
                 this.notes = notes;
-                Object.keys(notes).forEach(key => {
-                    const {content} = notes[key];
-                    notes[key].sections = getSections(content);
-                });
+                if (numChars) {
+                    Object.keys(notes).forEach(key => {
+                        const {content} = notes[key];
+                        notes[key].sections = getSections(content, numChars);
+                    });
+                }
                 if ($state.params.id > 0 && $state.params.id < notes.length) {
                     this.selected = $state.params.id;
                 } else {
@@ -114,12 +128,12 @@ function notesController($scope, $state, auth, storage, notifications, stateEmit
         if (!$event.ctrlKey && key != 'CONTROL' && !key.match(/ARROW|PAGE|END|HOME/)) {
             const note = this.notes[index];
             const {content} = note;
-            note.sections = getSections(content);
+            note.sections = getSections(content, numChars);
             note.unsaved = true;
         }
     };
 }
 notesController.$inject = [
-    '$scope', '$state', 'auth', 'storage', 'notifications', 'stateEmitter'
+    '$scope', '$state', 'auth', 'storage', 'notifications', 'stateEmitter', 'charSize'
 ];
 export default notesController;
