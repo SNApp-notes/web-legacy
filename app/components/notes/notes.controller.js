@@ -4,7 +4,7 @@ function getSections(text, numChars) {
     var result = [];
     var parts = text.split(re).filter(Boolean);
     for (let part of parts) {
-        const match = part.match(/:: (.*)/);
+        const match = part.match(/-+\n:: (.*)\n-+/);
         var lines = part.replace(/(^\n)|(\n$)/g, '').split(/\n/);
         var count = lines.map(line => {
             return line.length == 0 ? 1 : Math.ceil(line.length / numChars);

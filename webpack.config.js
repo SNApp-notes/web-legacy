@@ -47,7 +47,7 @@ module.exports = {
         }),
         new CopyWebpackPlugin([
             {from: 'favicon', to: 'favicon'},
-            {from: 'index.html'},
+            {from: 'index.php'},
             {from: 'rpc.php'},
             {from: 'json-rpc.php'},
             {from: '.htaccess'}
