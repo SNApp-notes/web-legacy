@@ -1,9 +1,8 @@
 function parse(text) {
-    var re = /(-+\n:: .*\n-+)/;
+    var re = /\n(-+\n:: .*\n-+)\n/;
     var re_begin = /^(-+\n:: .*\n-+)/;
     var re_end = /(-+\n:: .*\n-+)$/;
     var re_extract = /-+\n:: (.*)\n-+/;
-    var re_n = /(^\n)|(\n$)/g;
     var parts = text.split(re);
     // sanity checks to remove empty splits that are no empyt lines
     if (text.match(re_begin) && parts[0] === '') {
@@ -13,6 +12,7 @@ function parse(text) {
         parts.pop();
     }
     return parts.map(text => {
+        let lines = text.split(/\n/);
         return {
             header: () => {
                 const m = text.match(re_extract);
@@ -20,7 +20,7 @@ function parse(text) {
                     return m[1];
                 }
             },
-            lines: text.replace(re_n, '').split(/\n/)
+            lines
         };
     });
 }
@@ -30,7 +30,7 @@ function getSections(text, numChars) {
     var parts = parse(text);
     for (let part of parts) {
         var count = part.lines.map(line => {
-            return line.length == 0 ? 1 : Math.ceil(line.length / numChars);
+            return line.length === 0 ? 1 : Math.ceil(line.length / numChars);
         }).reduce((a,b) => a + b, 0);
         const label = part.header();
         if (label) {
@@ -67,8 +67,9 @@ function notesController(
             storage.get_notes().then((notes) => {
                 this.notes = notes;
                 if (numChars) {
-                    Object.keys(notes).forEach(key => {
+                    Object.keys(notes).forEach((key, i) => {
                         const {content} = notes[key];
+                        notes[key].index = i;
                         notes[key].sections = getSections(content, numChars);
                     });
                 }
@@ -96,6 +97,7 @@ function notesController(
         this.notes.push({
             name: 'new Note ' + index++,
             content: '',
+            index: this.notes.length,
             edit: true,
             newNote: true,
             unsaved: true
@@ -158,11 +160,12 @@ function notesController(
         var key = $event.key.toUpperCase();
         if ((!$event.ctrlKey && key != 'CONTROL' && !key.match(/ARROW|PAGE|END|HOME/)) ||
             ($event.ctrlKey && ['X', 'V'].includes(key))) {
-                const note = this.notes[index];
-                const {content} = note;
-                note.sections = getSections(content, numChars);
-                note.unsaved = true;
-            }
+            const note = this.notes[index];
+            const {content} = note;
+            console.log({content});
+            note.sections = getSections(content, numChars);
+            note.unsaved = true;
+        }
     };
 }
 notesController.$inject = [

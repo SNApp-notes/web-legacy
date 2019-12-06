@@ -12,7 +12,7 @@
     <li role="presentation" ng-class="{active: ctrl.selected == $index}"
         scroll-to="ctrl.selected == $index || note.newNote" parent="ul.nav"
         ng-repeat="note in ctrl.notes | filter: {name: filter}">
-        <a ui-sref="notes.note({id: $index})">
+        <a ui-sref="notes.note({id: note.index})">
             <span ng-show="note.unsaved">*</span>
             <span ng-hide="note.edit" ng-dblclick="ctrl.edit($index)">{{note.name}}</span>
         </a>
