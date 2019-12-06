@@ -1,16 +1,40 @@
-function getSections(text, numChars) {
+function parse(text) {
     var re = /(-+\n:: .*\n-+)/;
+    var re_begin = /^(-+\n:: .*\n-+)/;
+    var re_end = /(-+\n:: .*\n-+)$/;
+    var re_extract = /-+\n:: (.*)\n-+/;
+    var re_n = /(^\n)|(\n$)/g;
+    var parts = text.split(re);
+    // sanity checks to remove empty splits that are no empyt lines
+    if (text.match(re_begin) && parts[0] === '') {
+        parts.shift();
+    }
+    if (text.match(re_end) && parts[parts.length-1] === '') {
+        parts.pop();
+    }
+    return parts.map(text => {
+        return {
+            header: () => {
+                const m = text.match(re_extract);
+                if (m) {
+                    return m[1];
+                }
+            },
+            lines: text.replace(re_n, '').split(/\n/)
+        };
+    });
+}
+function getSections(text, numChars) {
     var line = 0;
     var result = [];
-    var parts = text.split(re).filter(Boolean);
+    var parts = parse(text);
     for (let part of parts) {
-        const match = part.match(/-+\n:: (.*)\n-+/);
-        var lines = part.replace(/(^\n)|(\n$)/g, '').split(/\n/);
-        var count = lines.map(line => {
+        var count = part.lines.map(line => {
             return line.length == 0 ? 1 : Math.ceil(line.length / numChars);
         }).reduce((a,b) => a + b, 0);
-        if (match) {
-            result.push({label: match[1], line});
+        const label = part.header();
+        if (label) {
+            result.push({label, line});
         }
         line += count;
     }
@@ -22,7 +46,7 @@ function notesController(
 ) {
     this.notes = [];
     var numChars;
-    
+
     stateEmitter.emit('note', $state.params.id || 0);
     stateEmitter.on('width', (width) => {
         numChars = Math.floor(width / charSize.width);

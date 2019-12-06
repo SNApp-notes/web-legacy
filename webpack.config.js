@@ -55,10 +55,6 @@ module.exports = {
     ],
     module: {
         rules: [
-            {
-                test: /[\/\\]node_modules[\/\\]some-module[\/\\]index\.js$/,
-                loader: "imports-loader?define=>false"
-            },
             { test: /angular(\.min)?\.js$/, loader: "imports-loader?$=jquery" },
             { test: /jquery(\.min)?\.js$/, loader: 'expose-loader?jQuery' },
             {
