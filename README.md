@@ -1,6 +1,8 @@
 # Notes
 
-Angular 1.5>= app for taking notes with 1.5 components and JSON-RPC backed written in php
+Plain Text Simple Notes taking App
+
+![Notes taking app Screenshot](screenshot.png)
 
 # INSTALL
 
@@ -10,6 +12,15 @@ to build the app you need node then call from command line:
 npm install
 npm run webpack
 ```
+
+# Requirements
+
+* php
+* pdo
+* sqlite
+* json
+* node/npm
+
 
 All files will be in dist directory you need to copy those files to the server
 
