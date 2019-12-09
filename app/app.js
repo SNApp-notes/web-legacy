@@ -77,5 +77,11 @@ module.config([
                     stateEmitter.emit('scrollTo', +$state.params.section);
                 }
             });
+            $transitions.onExit({}, function(transition) {
+                if (transition.$from().name === 'notes.note.section' &&
+                    transition.$to().name === "notes.note") {
+                    stateEmitter.emit('scrollTo', 0);
+                }
+            });
             $rootScope.year = new Date().getFullYear();
         }]);
