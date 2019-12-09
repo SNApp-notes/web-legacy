@@ -13,4 +13,10 @@ sections ul {
     padding: 0;
     list-style: none;
     padding-left: 10px;
+    max-height: calc(100% - 39px); /* input height + its bottom margin */
+    overflow: auto;
+}
+sections input.form-control {
+    margin: 0 5px 5px 5px;
+    width: calc(100% - 10px);
 }

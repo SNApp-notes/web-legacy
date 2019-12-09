@@ -1,5 +1,6 @@
+<input placeholder="filter" ng-model="filter" class="form-control"/>
 <ul>
-  <li ng-repeat="section in ctrl.parent.notes[ctrl.id].sections">
+  <li ng-repeat="section in ctrl.parent.notes[ctrl.id].sections | filter: {label: filter}">
     <a ui-sref="notes.note.section({section: section.line})"
        ui-sref-active="active">
       {{section.label}}
