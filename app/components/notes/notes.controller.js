@@ -48,6 +48,7 @@ function notesController(
     var numChars;
 
     stateEmitter.emit('note', $state.params.id || 0);
+    // -----------------------------------------------------------------------------------
     stateEmitter.on('width', (width) => {
         numChars = Math.floor(width / charSize.width);
         const note = this.notes[this.selected];
@@ -55,13 +56,16 @@ function notesController(
             note.sections = getSections(note.content, numChars);
         }
     });
+    // -----------------------------------------------------------------------------------
     $scope.$on('change', () => {
         this.selected = $state.params.id;
         stateEmitter.emit('note', this.selected);
     });
+    // -----------------------------------------------------------------------------------
     $scope.$on('scrollTo', (line) => {
         $scope.$broadcast('scrollTo', line);
     });
+    // -----------------------------------------------------------------------------------
     auth.authenticated().then((authenticated) => {
         if (authenticated) {
             storage.get_notes().then((notes) => {
@@ -97,6 +101,7 @@ function notesController(
         }
     });
 
+    // -----------------------------------------------------------------------------------
     var index = 1;
     this.newNote = () => {
         this.notes.push({
@@ -109,12 +114,14 @@ function notesController(
         });
         this.selected = this.notes.length - 1;
     };
+    // -----------------------------------------------------------------------------------
     this.edit = (index) => {
         var note = this.notes[index];
         note.newName = note.name;
         note.edit = true;
     };
 
+    // -----------------------------------------------------------------------------------
     this.inputKeyUp = ($event, index) => {
         var note = this.notes[index];
         if ($event.which == 13) {
@@ -126,6 +133,7 @@ function notesController(
         }
     };
 
+    // -----------------------------------------------------------------------------------
     var removeNote = (note) => {
         for (let i in this.notes) {
             if (this.notes[i] === note) {
@@ -135,6 +143,7 @@ function notesController(
         }
     };
 
+    // -----------------------------------------------------------------------------------
     this.deleteNote = (note) => {
         if (confirm('Are you sure you want to delete this note?')) {
             if (note.newNote) {
@@ -148,6 +157,7 @@ function notesController(
         }
     };
 
+    // -----------------------------------------------------------------------------------
     this.keydown = ($event, index) => {
         if ($event.ctrlKey) {
             var key = $event.key.toUpperCase();
@@ -170,6 +180,11 @@ function notesController(
             }
         }
     };
+    // -----------------------------------------------------------------------------------
+    this.position = (e) => {
+        $scope.position = e;
+    };
+    // -----------------------------------------------------------------------------------
     this.change = ($event, index) => {
         var key = $event.key.toUpperCase();
         if ((!$event.ctrlKey && key != 'CONTROL' && !key.match(/ARROW|PAGE|END|HOME/)) ||

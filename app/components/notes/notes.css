@@ -64,4 +64,14 @@ notes .nav .close {
     border: none;
     background: transparent;
 }
-
+.status {
+    position: absolute;
+    left: 200px;
+    right: 300px;
+    bottom: 0;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    text-align: left;
+    padding: 0 10px;
+    font-family: monospace;
+}

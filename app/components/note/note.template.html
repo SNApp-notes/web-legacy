@@ -1,5 +1,6 @@
 <div class="wrapper" resize="ctrl.onResize()">
   <textarea ng-model="ctrl.parent.notes[ctrl.id].content"
+            position="ctrl.parent.position($event)"
             ng-keydown="ctrl.parent.keydown($event, ctrl.id)"
             ng-keyup="ctrl.parent.change($event, ctrl.id)" ng-trim="false">
   </textarea>
