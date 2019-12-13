@@ -72,6 +72,11 @@ function notesController(
                         notes[key].index = i;
                         notes[key].sections = getSections(content, numChars);
                     });
+                } else {
+                    Object.keys(notes).forEach((key, i) => {
+                        const {content} = notes[key];
+                        notes[key].index = i;
+                    });
                 }
                 if ($state.params.id > 0 && $state.params.id < notes.length) {
                     this.selected = $state.params.id;
@@ -110,7 +115,7 @@ function notesController(
         note.edit = true;
     };
 
-    this.input_keyup = ($event, index) => {
+    this.inputKeyUp = ($event, index) => {
         var note = this.notes[index];
         if ($event.which == 13) {
             note.name = note.newName;
@@ -121,14 +126,23 @@ function notesController(
         }
     };
 
-    this.deleteNote = (index) => {
+    var removeNote = (note) => {
+        for (let i in this.notes) {
+            if (this.notes[i] === note) {
+                this.notes.splice(i, 1);
+                break;
+            }
+        }
+    };
+
+    this.deleteNote = (note) => {
         if (confirm('Are you sure you want to delete this note?')) {
-            var note = this.notes[index];
             if (note.newNote) {
+                removeNote(note);
                 this.notes.splice(index, 1);
             } else {
                 storage.remove_note(note.id).then((success) => {
-                    this.notes.splice(index, 1);
+                    removeNote(note);
                 });
             }
         }
