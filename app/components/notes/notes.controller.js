@@ -58,7 +58,7 @@ function notesController(
     });
     // -----------------------------------------------------------------------------------
     $scope.$on('change', () => {
-        this.selected = $state.params.id;
+        this.selected = this.notes[$state.params.id];
         stateEmitter.emit('note', this.selected);
     });
     // -----------------------------------------------------------------------------------
@@ -66,33 +66,38 @@ function notesController(
         $scope.$broadcast('scrollTo', line);
     });
     // -----------------------------------------------------------------------------------
+    var init = (notes) => {
+        this.notes = notes;
+        if (numChars) {
+            Object.keys(notes).forEach((key, i) => {
+                const {content} = notes[key];
+                notes[key].index = i;
+                notes[key].sections = getSections(content, numChars);
+            });
+        } else {
+            Object.keys(notes).forEach((key, i) => {
+                const {content} = notes[key];
+                notes[key].index = i;
+            });
+        }
+        if ($state.params.id > 0 && $state.params.id < notes.length) {
+            this.selected = notes[$state.params.id];
+            this.jump = this.selected;
+        } else {
+            this.selected = notes[0];
+            $state.go('notes.note', {id: 0});
+        }
+        if ($state.params.section) {
+            $timeout(() => {
+                stateEmitter.emit('scrollTo', +$state.params.section);
+            }, 0);
+        }
+    };
+    // -----------------------------------------------------------------------------------
     auth.authenticated().then((authenticated) => {
         if (authenticated) {
             storage.get_notes().then((notes) => {
-                this.notes = notes;
-                if (numChars) {
-                    Object.keys(notes).forEach((key, i) => {
-                        const {content} = notes[key];
-                        notes[key].index = i;
-                        notes[key].sections = getSections(content, numChars);
-                    });
-                } else {
-                    Object.keys(notes).forEach((key, i) => {
-                        const {content} = notes[key];
-                        notes[key].index = i;
-                    });
-                }
-                if ($state.params.id > 0 && $state.params.id < notes.length) {
-                    this.selected = $state.params.id;
-                } else {
-                    this.selected = 0;
-                    $state.go('notes.note', {id: 0});
-                }
-                if ($state.params.section) {
-                    $timeout(() => {
-                        stateEmitter.emit('scrollTo', +$state.params.section);
-                    }, 0);
-                }
+                $timeout(() => init(notes), 0);
             }).catch((error) => {
                 notifications.showError({message: error});
             });
@@ -104,19 +109,21 @@ function notesController(
     // -----------------------------------------------------------------------------------
     var index = 1;
     this.newNote = () => {
-        this.notes.push({
+        this.selected.edit = false;
+        var note = {
             name: 'new Note ' + index++,
             content: '',
             index: this.notes.length,
             edit: true,
             newNote: true,
             unsaved: true
-        });
-        this.selected = this.notes.length - 1;
+        };
+        this.notes.push(note);
+        this.selected = note;
+        $state.go('notes.note', {id: note.index});
     };
     // -----------------------------------------------------------------------------------
-    this.edit = (index) => {
-        var note = this.notes[index];
+    this.edit = (note) => {
         note.newName = note.name;
         note.edit = true;
     };
@@ -191,7 +198,6 @@ function notesController(
             ($event.ctrlKey && ['X', 'V'].includes(key))) {
             const note = this.notes[index];
             const {content} = note;
-            console.log({content});
             note.sections = getSections(content, numChars);
             note.unsaved = true;
         }

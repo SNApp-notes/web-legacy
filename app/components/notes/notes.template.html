@@ -9,12 +9,12 @@
     </li>
   </ul>
   <ul class="nav nav-pills nav-stacked">
-    <li role="presentation" ng-class="{active: ctrl.selected == $index}"
-        scroll-to="ctrl.selected == $index || note.newNote" parent="ul.nav"
+    <li role="presentation" ng-class="{active: ctrl.selected.index == note.index}"
+        scroll-to="ctrl.selected.index == note.index || note.newNote" parent="ul.nav"
         ng-repeat="note in ctrl.notes | filter: {name: filter}">
         <a ui-sref="notes.note({id: note.index})">
             <span ng-show="note.unsaved">*</span>
-            <span ng-hide="note.edit" ng-dblclick="ctrl.edit($index)">{{note.name}}</span>
+            <span ng-hide="note.edit" ng-dblclick="ctrl.edit(note)">{{note.name}}</span>
         </a>
         <input ng-show="note.edit" ng-model="note.newName"
                autofocus="note.edit"
