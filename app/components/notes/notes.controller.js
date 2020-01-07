@@ -51,15 +51,19 @@ function notesController(
     // -----------------------------------------------------------------------------------
     stateEmitter.on('width', (width) => {
         numChars = Math.floor(width / charSize.width);
-        const note = this.notes[this.selected];
+        const note = this.selected;
         if (note) {
             note.sections = getSections(note.content, numChars);
         }
     });
     // -----------------------------------------------------------------------------------
     $scope.$on('change', () => {
-        this.selected = this.notes[$state.params.id];
-        stateEmitter.emit('note', this.selected);
+        if ($state.params.id) {
+            this.selected = this.notes[$state.params.id];
+            if (this.selected) {
+                stateEmitter.emit('note', this.selected.index);
+            }
+        }
     });
     // -----------------------------------------------------------------------------------
     $scope.$on('scrollTo', (line) => {
