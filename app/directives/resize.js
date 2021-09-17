@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import resize from 'imports-loader?define=>false!jquery.resize';
+import resize from 'imports-loader?additionalCode=var%20define=false;!jquery.resize';
 resize($);
 
 function resizeDirective() {

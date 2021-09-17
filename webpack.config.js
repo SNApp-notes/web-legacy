@@ -2,6 +2,8 @@ var path = require('path');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var webpack = require('webpack');
 
+var production = process.env.NODE_ENV === 'production';
+
 module.exports = {
     entry:  {
         app: path.resolve('./app') + '/app.js'
@@ -10,21 +12,14 @@ module.exports = {
         path: path.resolve('./dist'),
         filename: "[name].js"
     },
-    resolve: {
-        alias: {
-            'jquery.resize$': path.resolve(__dirname, '../resize/jquery.resize.js')
-        }
-    },
+    mode: production ? 'production' : 'development',
     optimization: {
         splitChunks: {
             chunks: 'async',
             minSize: 30000,
-            maxSize: 0,
             minChunks: 1,
             maxAsyncRequests: 6,
             maxInitialRequests: 4,
-            automaticNameDelimiter: '~',
-            automaticNameMaxLength: 30,
             cacheGroups: {
                 vendor: {
                     test: /node_modules/,
@@ -43,26 +38,50 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            PRODUCTION: process.env.NODE_ENV == 'production'
+            PRODUCTION: production
         }),
-        new CopyWebpackPlugin([
-            {from: 'favicon', to: 'favicon'},
-            {from: 'index.php'},
-            {from: 'rpc.php'},
-            {from: 'json-rpc.php'},
-            {from: '.htaccess'}
-        ])
+        new CopyWebpackPlugin({
+            patterns: [
+                {from: 'favicon', to: 'favicon'},
+                {from: 'index.php'},
+                {from: 'rpc.php'},
+                {from: 'json-rpc.php'},
+                {from: '.htaccess'}
+            ]
+        })
     ],
     module: {
         rules: [
-            { test: /angular(\.min)?\.js$/, loader: "imports-loader?$=jquery" },
-            { test: /jquery(\.min)?\.js$/, loader: 'expose-loader?jQuery' },
+            {
+                test: /angular(\.min)?\.js$/,
+                use: [{
+                    loader: 'imports-loader',
+                    options: {
+                        imports: [
+                            "default jquery $"
+                        ]
+                    }
+                }]
+            },
+            {
+                test: /jquery(\.min)?\.js$/,
+                use: [{
+                    loader: 'expose-loader',
+                    options: {
+                        exposes: [
+                            '$|jQuery'
+                        ]
+                    }
+                }]
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['@babel/preset-env']
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env']
+                    }
                 }
             },
             {
@@ -71,12 +90,17 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                loaders: ['style-loader', 'css-loader']
+                use: [
+                    {loader: 'style-loader'},
+                    {loader: 'css-loader'}
+                ]
             },
             {
                 test: /\.(eot|woff2?|ttf|svg)$/,
-                loader: 'file-loader' +
-                    (process.env.NODE_ENV == 'production' ? '?publicPath=assets/&outputPath=/assets/' : '')
+                use: {
+                    loader: 'file-loader' +
+                        (production ? '?publicPath=assets/&outputPath=/assets/' : '')
+                }
             }
         ]
     }

@@ -1,4 +1,1 @@
-* text eol=lf
-.* text eol=lf
-dist/* binary
-*.png binary
+package-lock.json binary

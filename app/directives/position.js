@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import position from 'imports-loader?define=>false!jquery-position-event';
+import position from 'imports-loader?additionalCode=var%20define=false;!jquery-position-event';
 position(window, $);
 
 function positionDirective() {

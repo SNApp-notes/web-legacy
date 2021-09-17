@@ -5,7 +5,7 @@
     height: calc(100% - 18px);
 }
 .note-content::before {
-    width: calc(80ch - 4px);
+    width: calc(80ch + 2px);
     content: '';
     display: block;
     position: absolute;
